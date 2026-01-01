@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Добре дошли!</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Courier New", monospace;
+      background: radial-gradient(circle at top, #0a0f0a, #000);
+      color: #00ff88;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 900px;
+      border: 1px solid #00ff88;
+      box-shadow: 0 0 20px rgba(0,255,136,0.3);
+      padding: 30px;
+      background: rgba(0,0,0,0.85);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      opacity: 0.7;
+      margin-bottom: 30px;
+    }
+
+    .terminal {
+      background: #020702;
+      border: 1px solid #00ff88;
+      padding: 15px;
+      margin-bottom: 25px;
+      font-size: 0.95rem;
+    }
+
+    .terminal span {
+      color: #00ffaa;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 14px 26px;
+      border: 1px solid #00ff88;
+      background: transparent;
+      color: #00ff88;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background: #00ff88;
+      color: #000;
+      box-shadow: 0 0 15px #00ff88;
+    }
+
+    .status {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      border: 1px dashed #00ff88;
+      padding: 15px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.8rem;
+      opacity: 0.5;
+    }
+  </style>
+  <canvas id="matrix"></canvas>
+  <style>
+    #matrix {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>CartelBoro 2026</h1>
+    <div class="subtitle">По-Добро начало от всякога</div>
+
+    <div class="terminal">
+      <div>> System Status: <span>OFFLINE</span></div>
+      <div>> Telegram Group: <span>OFFLINE</span></div>
+      <div>> Telegram Admin: <span>@mr_cartelboro</span></div>
+    </div>
+
+    <div class="info-box">
+      <p>
+        Това е официалната страница на <b>CartelBoro</b>.<br>
+        Тук ще се публикуват важни новини, ъпдейти и официални канали.
+      </p>
+    </div>
+
+    <div class="buttons">
+   *Сайт   <a href="" class="btn" target="_blank">ТЕЛЕГРАМ ГРУПАТА Е ИЗТРИТА! ОЧАКВАЙТЕ СКОРО НОВА!</a>
+      <a href="news.html" class="btn">НОВИНИ</a>
+    </div>
+
+    <footer>
+      © Cartel Host • Access Limited
+    </footer>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+  
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const letters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ@$#';
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+
+    for (let x = 0; x < columns; x++) drops[x] = 1;
+
+    function draw() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#00ff88';
+      ctx.font = fontSize + 'px monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+          drops[i] = 0;
+        drops[i]++;
+      }
+    }
+
+    setInterval(draw, 33);
+  </script>
+</body>
+</html>
