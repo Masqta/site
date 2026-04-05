@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Общи условия - AirStore Bulgaria</title>
+  <style>
+    :root{
+      --bg:#f8f9fb;
+      --text:#0a0a0f;
+      --muted:#64748b;
+      --line:rgba(0,0,0,.08);
+      --card:rgba(255,255,255,.95);
+      --shadow:0 10px 40px rgba(0,0,0,.08);
+      --accent:#0071e3;
+      --accent-light:#e8f4fd;
+      --success:#22c55e;
+      --danger:#ef4444;
+      --r:20px;
+      --pill:999px;
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+    html{scroll-behavior:smooth;touch-action:pan-y}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;color:var(--text);
+      background:var(--bg);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+    html,body{width:100%;max-width:100vw;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+
+    /* Top Bar */
+    .top{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.98);backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--line);box-shadow:0 2px 20px rgba(0,0,0,.05)}
+    .topin{max-width:1200px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-0.5px}
+    .logo-img{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#00d4aa);display:grid;place-items:center;color:#fff;font-size:22px;flex-shrink:0;box-shadow:0 4px 12px rgba(0,113,227,.25)}
+    .logo-text{display:flex;align-items:center}
+    .logo-air{color:var(--accent)}
+    .logo-store{color:var(--text)}
+    .back-btn{padding:10px 18px;background:var(--accent-light);color:var(--accent);border-radius:var(--pill);font-weight:600;font-size:13px;transition:all .2s}
+    .back-btn:hover{background:var(--accent);color:#fff}
+
+    /* Main Content */
+    .wrap{max-width:800px;margin:0 auto;padding:100px 20px 60px}
+    
+    .page-header{text-align:center;margin-bottom:40px}
+    .page-title{font-size:32px;font-weight:800;margin:0 0 12px;letter-spacing:-1px}
+    .page-subtitle{color:var(--muted);font-size:14px}
+
+    /* Terms Card */
+    .terms-card{background:#fff;border-radius:24px;padding:30px 24px;box-shadow:var(--shadow);margin-bottom:30px}
+    .terms-intro{color:var(--muted);font-size:14px;margin-bottom:30px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+
+    /* Term Items */
+    .term-item{display:flex;gap:16px;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--line)}
+    .term-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+    .term-number{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#00d4aa);color:#fff;display:grid;place-items:center;font-weight:800;font-size:16px;flex-shrink:0}
+    .term-content{flex:1}
+    .term-title{font-weight:700;font-size:15px;margin-bottom:6px;color:var(--text)}
+    .term-text{color:var(--muted);font-size:13px;line-height:1.7}
+    .term-text ul{margin:10px 0;padding-left:20px}
+    .term-text li{margin-bottom:6px}
+
+    /* Footer */
+    .footer{background:linear-gradient(135deg,var(--text),#1f2937);color:#fff;padding:30px 20px;text-align:center;border-radius:24px 24px 0 0;margin-top:40px}
+    .footer-content{max-width:800px;margin:0 auto}
+    .footer-text{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:12px}
+    .footer-link{color:#fff;background:var(--accent);padding:10px 20px;border-radius:var(--pill);display:inline-block;font-weight:600;transition:all .2s}
+    .footer-link:hover{background:#0066cc;transform:translateY(-2px)}
+    .footer-copyright{font-size:12px;color:rgba(255,255,255,.5);margin-top:16px}
+
+    /* Desktop */
+    @media (min-width:768px){
+      .topin{padding:16px 24px}
+      .wrap{padding:110px 24px 80px}
+      .page-title{font-size:40px}
+      .terms-card{padding:40px}
+      .term-title{font-size:16px}
+      .term-text{font-size:14px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <div class="top">
+    <div class="topin">
+      <a href="index.html" class="logo">
+        <div class="logo-img">🎧</div>
+        <span class="logo-text">
+          <span class="logo-air">Air</span><span class="logo-store">StoreBulgaria</span>
+        </span>
+      </a>
+      <a href="index.html" class="back-btn">← Назад към магазина</a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="wrap">
+    
+    <div class="page-header">
+      <h1 class="page-title">📋 Общи условия</h1>
+      <p class="page-subtitle">Правила и условия за ползване на AirStore Bulgaria</p>
+    </div>
+
+    <div class="terms-card">
+      <div class="terms-intro">
+        С настоящите Общи условия се уреждат отношенията между "AirStore Bulgaria" (наричан по-долу "Търговецът") и потребителите на онлайн магазина. Моля, прочетете внимателно преди да направите поръчка.
+      </div>
+
+      <!-- Term 1 -->
+      <div class="term-item">
+        <div class="term-number">1</div>
+        <div class="term-content">
+          <div class="term-title">Идентификация на търговеца</div>
+          <div class="term-text">
+            AirStore Bulgaria е онлайн магазин за продажба на електроника и аксесоари. За връзка с нас: тел. 0878 460 279, email: info@airstore.bg
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 2 -->
+      <div class="term-item">
+        <div class="term-number">2</div>
+        <div class="term-content">
+          <div class="term-title">Приложимо законодателство</div>
+          <div class="term-text">
+            Настоящите общи условия са съобразени със Закона за защита на потребителите (ЗЗП), Закона за електронната търговия и другите приложими нормативни актове на Република България.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 3 -->
+      <div class="term-item">
+        <div class="term-number">3</div>
+        <div class="term-content">
+          <div class="term-title">Продукти и цени</div>
+          <div class="term-text">
+            Всички продукти в магазина са с посочени цени в български лева (BGN) и евро (EUR). Цените включват ДДС. Търговецът си запазва правото да променя цените без предизвестие.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 4 -->
+      <div class="term-item">
+        <div class="term-number">4</div>
+        <div class="term-content">
+          <div class="term-title">Наличност на продуктите</div>
+          <div class="term-text">
+            Продуктите се предлагат в зависимост от наличността. При изчерпване на наличностите, поръчките се обработват при следващо зареждане. Клиентът се уведомява за очаквания срок на доставка.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 5 -->
+      <div class="term-item">
+        <div class="term-number">5</div>
+        <div class="term-content">
+          <div class="term-title">Поръчка и сключване на договор</div>
+          <div class="term-text">
+            Поръчката се счита за направена след попълване на формата за поръчка и натискане на бутона "Изпрати поръчката". Договорът се сключва от разстояние чрез електронни средства.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 6 -->
+      <div class="term-item">
+        <div class="term-number">6</div>
+        <div class="term-content">
+          <div class="term-title">Потвърждение на поръчката</div>
+          <div class="term-text">
+            След направена поръчка, клиентът получава потвърждение по телефон или SMS. Поръчката се обработва в рамките на 1-2 работни дни от нейното потвърждаване.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 7 -->
+      <div class="term-item">
+        <div class="term-number">7</div>
+        <div class="term-content">
+          <div class="term-title">Начини на плащане</div>
+          <div class="term-text">
+            <ul>
+              <li><strong>Наложен платеж</strong> - плащане при получаване на пратката</li>
+              <li>При поръчка над 100 лв. - безплатна доставка</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 8 -->
+      <div class="term-item">
+        <div class="term-number">8</div>
+        <div class="term-content">
+          <div class="term-title">Доставка</div>
+          <div class="term-text">
+            Доставката се извършва с куриерска фирма Еконт до посочен от клиента адрес или офис. Срокът на доставка е 1-3 работни дни за цяла България. Доставката е безплатна при поръчка над 100 лв.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 9 -->
+      <div class="term-item">
+        <div class="term-number">9</div>
+        <div class="term-content">
+          <div class="term-title">Преглед и тест преди плащане</div>
+          <div class="term-text">
+            Клиентът има право на преглед и тест на продукта преди плащане при куриера. При несъответствие или повреда, клиентът може да откаже пратката без да заплаща нищо.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 10 -->
+      <div class="term-item">
+        <div class="term-number">10</div>
+        <div class="term-content">
+          <div class="term-title">Право на отказ (14 дни)</div>
+          <div class="term-text">
+            Съгласно ЗЗП, клиентът има право да се откаже от договора в срок от 14 дни от получаване на стоката, без да посочва причина. Стоката трябва да бъде в оригиналната си опаковка и без следи от употреба.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 11 -->
+      <div class="term-item">
+        <div class="term-number">11</div>
+        <div class="term-content">
+          <div class="term-title">Връщане на суми</div>
+          <div class="term-text">
+            При упражняване на правото на отказ, сумата се възстановява в срок до 14 дни от датата на връщане на стоката. Връщането се извършва по банков път или наложен платеж.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 12 -->
+      <div class="term-item">
+        <div class="term-number">12</div>
+        <div class="term-content">
+          <div class="term-title">Гаранция</div>
+          <div class="term-text">
+            Всички продукти се предлагат с 6 месеца гаранция. При дефект в рамките на гаранционния срок, клиентът има право на безплатен ремонт или замяна на продукта.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 13 -->
+      <div class="term-item">
+        <div class="term-number">13</div>
+        <div class="term-content">
+          <div class="term-title">Рекламации</div>
+          <div class="term-text">
+            Рекламации се приемат в срок до 14 дни от получаване на стоката. Необходимо е да се предостави доказателство за покупка и описание на проблема. Рекламациите се разглеждат в срок до 7 работни дни.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 14 -->
+      <div class="term-item">
+        <div class="term-number">14</div>
+        <div class="term-content">
+          <div class="term-title">Промоционални кодове</div>
+          <div class="term-text">
+            Промоционалните кодове са валидни за определен период и не могат да се комбинират с други отстъпки. Търговецът си запазва правото да променя или отменя промоциите.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 15 -->
+      <div class="term-item">
+        <div class="term-number">15</div>
+        <div class="term-content">
+          <div class="term-title">Лични данни и поверителност</div>
+          <div class="term-text">
+            Личните данни на клиентите се обработват съгласно Закона за защита на личните данни. Информацията се използва единствено за обработка на поръчки и не се предоставя на трети лица.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 16 -->
+      <div class="term-item">
+        <div class="term-number">16</div>
+        <div class="term-content">
+          <div class="term-title">Бисквитки (Cookies)</div>
+          <div class="term-text">
+            Сайтът използва бисквитки за подобряване на потребителското изживяване. Продължавайки да използвате сайта, вие се съгласявате с използването на бисквитки.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 17 -->
+      <div class="term-item">
+        <div class="term-number">17</div>
+        <div class="term-content">
+          <div class="term-title">Отговорност</div>
+          <div class="term-text">
+            Търговецът не носи отговорност за забавяне на доставката поради непреодолима сила или действия на куриерската фирма. Отговорността за щети е ограничена до стойността на поръчаната стока.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 18 -->
+      <div class="term-item">
+        <div class="term-number">18</div>
+        <div class="term-content">
+          <div class="term-title">Промени в общите условия</div>
+          <div class="term-text">
+            Търговецът си запазва правото да променя настоящите общи условия по всяко време. Промените влизат в сила от момента на публикуването им на сайта.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 19 -->
+      <div class="term-item">
+        <div class="term-number">19</div>
+        <div class="term-content">
+          <div class="term-title">Спорове и разрешаване</div>
+          <div class="term-text">
+            При възникване на спор, страните се задължават да го разрешат по взаимно съгласие. При невъзможност, спорът се отнася до компетентния български съд или Комисията за защита на потребителите.
+          </div>
+        </div>
+      </div>
+
+      <!-- Term 20 -->
+      <div class="term-item">
+        <div class="term-number">20</div>
+        <div class="term-content">
+          <div class="term-title">Контакти и връзка</div>
+          <div class="term-text">
+            <ul>
+              <li><strong>Телефон:</strong> 0878 460 279</li>
+              <li><strong>Email:</strong> info@airstore.bg</li>
+              <li><strong>Instagram:</strong> @airstore.bg</li>
+              <li><strong>TikTok:</strong> @airstore.bg</li>
+              <li><strong>Работно време:</strong> Пон-Пет: 9:00-18:00</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-text">Ако имате въпроси относно общите условия, моля свържете се с нас</div>
+      <a href="index.html" class="footer-link">← Обратно към магазина</a>
+      <div class="footer-copyright">© 2025 AirStore Bulgaria. Всички права запазени.</div>
+    </div>
+  </footer>
+
+</body>
+</html>
