@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>AirStore Bulgaria - AirPods Pro 3</title>
+  <style>
+    :root{
+      --bg:#f8f9fb;
+      --text:#0a0a0f;
+      --muted:#64748b;
+      --line:rgba(0,0,0,.08);
+      --card:rgba(255,255,255,.95);
+      --shadow:0 10px 40px rgba(0,0,0,.08);
+      --accent:#0071e3;
+      --accent-light:#e8f4fd;
+      --success:#22c55e;
+      --danger:#ef4444;
+      --warning:#f59e0b;
+      --r:20px;
+      --pill:999px;
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+    html{scroll-behavior:smooth;touch-action:pan-y}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;color:var(--text);
+      background:var(--bg);line-height:1.5;overflow-x:hidden;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+    html,body{width:100%;max-width:100vw;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;height:auto}
+
+    /* Honeypot */
+    .honeypot{position:absolute;left:-9999px;opacity:0;height:0;width:0;overflow:hidden}
+
+    /* Animations */
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+    @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+    @keyframes slideInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes bounceEgg{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+    
+    .reveal{opacity:1;transform:translateY(0);transition:all .6s ease}
+    .reveal.animate{opacity:0;transform:translateY(30px)}
+    .reveal.animate.show{opacity:1;transform:translateY(0)}
+
+    /* Easter Header Banner - News Ticker Style */
+    .easter-header{background:linear-gradient(90deg,#ff6b9d,#c44569);position:fixed;top:0;left:0;right:0;z-index:101;height:28px;overflow:hidden}
+    .easter-ticker-wrap{width:100%;overflow:hidden;white-space:nowrap}
+    .easter-ticker{display:inline-block;animation:ticker 20s linear infinite}
+    @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-33.33%)}}
+    .easter-ticker-item{display:inline-block;color:#fff;font-size:12px;font-weight:700;padding:6px 40px 6px 0}
+    .easter-header-code{background:#fff;color:#e84393;padding:2px 10px;border-radius:12px;font-weight:800;font-size:11px}
+
+    /* Top Bar - Fixed Sticky (compact) */
+    .top{position:fixed;top:28px;left:0;right:0;z-index:100;background:rgba(255,255,255,.98);backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--line);box-shadow:0 2px 20px rgba(0,0,0,.05)}
+    .topin{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:18px;letter-spacing:-0.5px}
+    .logo-img{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#00d4aa);display:grid;place-items:center;color:#fff;font-size:18px;flex-shrink:0;box-shadow:0 4px 12px rgba(0,113,227,.25)}
+    .logo-text{display:flex;align-items:center}
+    .logo-air{color:var(--accent)}
+    .logo-store{color:var(--text)}
+    .icon-btn{width:38px;height:38px;border-radius:12px;border:none;background:#f0f4f8;
+      display:grid;place-items:center;cursor:pointer;transition:all .2s;position:relative;flex-shrink:0}
+    .icon-btn:hover{background:#e8f4fd}
+    .icon-btn:active{transform:scale(.95)}
+    .cart-badge{position:absolute;top:-3px;right:-3px;width:20px;height:20px;background:var(--danger);color:#fff;
+      font-size:10px;font-weight:800;border-radius:50%;display:grid;place-items:center;display:none;box-shadow:0 2px 8px rgba(239,68,68,.4)}
+
+    /* Buttons - Easter Theme */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 28px;border-radius:var(--pill);
+      border:none;background:var(--text);color:#fff;font-weight:700;font-size:16px;cursor:pointer;width:100%;transition:all .3s;box-shadow:0 4px 15px rgba(0,0,0,.15)}
+    .btn:active{transform:scale(.98)}
+    .btn-accent{background:linear-gradient(135deg,#ff6b9d,#c44569);color:#fff;box-shadow:0 6px 20px rgba(255,107,157,.4)}
+    .btn-accent:hover{background:linear-gradient(135deg,#c44569,#ff6b9d);transform:translateY(-3px);box-shadow:0 8px 25px rgba(255,107,157,.5)}
+    .btn-outline{background:transparent;border:2px solid #ff6b9d;color:#c44569}
+    .btn-outline:hover{background:#ff6b9d;color:#fff}
+    .btn-success{background:linear-gradient(135deg,#22c55e,#16a34a)}
+    .btn-sm{padding:10px 18px;font-size:13px}
+    .btn-danger{background:var(--danger)}
+
+    .wrap{max-width:1200px;margin:0 auto;padding:85px 16px 100px}
+
+    /* Hero - PRODUCT IMAGE FIRST */
+    .hero{padding:20px 0}
+    
+    /* Product Image Section - Modern Design */
+    .product-showcase{background:#fff;border:none;border-radius:24px;padding:24px;margin-bottom:24px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.08)}
+    .img-wrap{position:relative;padding:40px 20px;background:linear-gradient(180deg,#f8f9fb 0%,#fff 100%);border-radius:20px}
+    .discount-badge{position:absolute;top:16px;left:16px;padding:10px 18px;background:linear-gradient(135deg,#ff6b9d,#c44569);color:#fff;font-weight:800;font-size:13px;border-radius:var(--pill);animation:pulse 2s infinite;box-shadow:0 4px 16px rgba(255,107,157,.4)}
+    .img-wrap img{width:100%;max-width:300px;height:auto;filter:drop-shadow(0 30px 60px rgba(0,0,0,.2));transition:transform .3s ease}
+    .img-wrap img:hover{transform:scale(1.02)}
+    .gallery{display:flex;gap:12px;justify-content:center;margin-top:20px}
+    .th{width:64px;height:64px;border-radius:16px;border:2px solid transparent;background:#f8f9fb;display:grid;place-items:center;cursor:pointer;overflow:hidden;transition:all .2s}
+    .th:hover{border-color:var(--accent-light)}
+    .th.active{border-color:var(--accent);background:var(--accent-light);box-shadow:0 4px 12px rgba(0,113,227,.2)}
+    .th img{width:100%;height:100%;object-fit:cover}
+
+    /* Product Info */
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--accent-light);color:var(--accent);
+      border-radius:var(--pill);font-size:12px;font-weight:700;margin-bottom:12px}
+    .live-dot{width:8px;height:8px;background:var(--success);border-radius:50%;animation:pulse 2s infinite}
+    h1{margin:0 0 12px;font-size:28px;letter-spacing:-1px;line-height:1.1;font-weight:800}
+    .hero-desc{font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.6}
+
+    /* Stock Counter - Modern Design */
+    .stock-bar{background:linear-gradient(135deg,#fef3f2,#fff5f5);border:none;border-radius:18px;
+      padding:16px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 16px rgba(239,68,68,.1)}
+    .stock-bar.out-of-stock{background:linear-gradient(135deg,#f3f4f6,#e5e7eb);box-shadow:0 4px 16px rgba(0,0,0,.08)}
+    .stock-bar.out-of-stock .stock-icon{animation:none}
+    .stock-bar.out-of-stock .stock-title{color:#6b7280}
+    .stock-icon{font-size:26px;animation:pulse 2s infinite}
+    .stock-text{flex:1}
+    .stock-title{font-weight:700;font-size:14px;color:var(--danger)}
+    .stock-subtitle{font-size:12px;color:var(--muted);margin-top:4px}
+    .stock-progress{flex:1;height:6px;background:rgba(239,68,68,.1);border-radius:999px;overflow:hidden;margin-top:6px}
+    .stock-fill{height:100%;background:linear-gradient(90deg,var(--danger),#f97316);width:60%;transition:width .3s}
+    .stock-count{font-weight:800;color:var(--danger)}
+
+    /* Out of Stock Banner */
+    .out-of-stock-banner{background:linear-gradient(135deg,#1f2937,#374151);color:#fff;border-radius:18px;padding:20px;margin-bottom:20px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.15)}
+    .out-of-stock-banner .oos-icon{font-size:48px;margin-bottom:12px;display:block}
+    .out-of-stock-banner .oos-title{font-size:20px;font-weight:800;margin-bottom:8px}
+    .out-of-stock-banner .oos-subtitle{font-size:14px;opacity:.9;margin-bottom:16px}
+    .out-of-stock-banner .oos-restock{background:rgba(255,255,255,.15);border-radius:12px;padding:14px;margin-top:12px}
+    .out-of-stock-banner .oos-restock-title{font-weight:700;font-size:13px;margin-bottom:4px}
+    .out-of-stock-banner .oos-restock-text{font-size:12px;opacity:.85}
+    .btn-disabled{background:#9ca3af !important;cursor:not-allowed !important;opacity:.7}
+    .btn-disabled:hover{background:#9ca3af !important}
+
+    /* Easter Promo Banner - Big & Visible */
+    .easter-promo-banner{background:linear-gradient(135deg,#fff5f7 0%,#ffe4ec 50%,#fff5f7 100%);border:3px solid #ff6b9d;border-radius:20px;padding:20px;margin-bottom:20px;text-align:center;box-shadow:0 8px 30px rgba(255,107,157,.25);position:relative;overflow:hidden}
+    .easter-promo-banner::before{content:'🌸';position:absolute;top:10px;left:15px;font-size:30px;opacity:.4;animation:float 3s ease-in-out infinite}
+    .easter-promo-banner::after{content:'🌸';position:absolute;top:15px;right:15px;font-size:24px;opacity:.4;animation:float 3s ease-in-out infinite .5s}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    .easter-promo-banner .easter-promo-title{font-size:22px;font-weight:800;color:#c44569;margin-bottom:8px}
+    .easter-promo-banner .easter-promo-text{font-size:14px;color:#666;margin-bottom:10px}
+    .easter-promo-banner .easter-promo-code{background:linear-gradient(135deg,#ff6b9d,#c44569);color:#fff;padding:12px 30px;border-radius:30px;font-weight:800;font-size:24px;display:inline-block;margin-bottom:8px;box-shadow:0 4px 15px rgba(255,107,157,.4);letter-spacing:2px}
+    .easter-promo-banner .easter-promo-discount{font-size:14px;color:#333}
+    .easter-promo-banner .easter-promo-discount span{color:#22c55e;font-weight:700;font-size:16px}
+
+    /* Easter Theme Colors */
+    :root{--easter-pink:#ff6b9d;--easter-purple:#c44569;--easter-yellow:#feca57;--easter-green:#a8e6cf;--easter-blue:#7fdbff}
+
+    /* Price - Easter Theme */
+    .price-box{background:linear-gradient(135deg,#fff,#fff5f7);border:2px solid #ffe4ec;border-radius:20px;padding:20px;margin-bottom:20px;box-shadow:0 4px 20px rgba(255,107,157,.1)}
+    .price-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+    .price-current{font-weight:800;font-size:40px;letter-spacing:-1px;background:linear-gradient(135deg,#22c55e,#16a34a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .price-old{color:#9ca3af;text-decoration:line-through;font-size:20px}
+    .price-save{padding:8px 16px;border-radius:var(--pill);background:linear-gradient(135deg,#ff6b9d,#c44569);color:#fff;font-weight:700;font-size:13px;box-shadow:0 4px 15px rgba(255,107,157,.3)}
+    .price-dual{color:var(--muted);font-size:13px;display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;padding-top:12px;border-top:1px solid var(--line)}
+
+    /* Features - Easter Theme */
+    .features-list{display:grid;gap:10px;margin:20px 0}
+    .feature-item{display:flex;align-items:center;gap:14px;padding:16px;background:#fff;border:2px solid #ffe4ec;border-radius:18px;box-shadow:0 2px 12px rgba(255,107,157,.08);transition:all .2s}
+    .feature-item:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(255,107,157,.15);border-color:#ff6b9d}
+    .feature-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#ffe4ec,#fff5f7);display:grid;place-items:center;font-size:24px;flex-shrink:0}
+    .feature-text b{display:block;font-size:14px;margin-bottom:2px;color:#c44569}
+    .feature-text small{color:var(--muted);font-size:12px}
+
+    /* Package - Easter Theme */
+    .package{background:linear-gradient(135deg,#fff,#fff5f7);border:2px solid #ffe4ec;border-radius:20px;padding:20px;margin-top:20px;box-shadow:0 4px 20px rgba(255,107,157,.1)}
+    .package-title{font-weight:800;font-size:16px;margin-bottom:14px;display:flex;justify-content:space-between;color:#c44569}
+    .package-title span:last-child{color:#ff6b9d;font-size:12px;font-weight:600}
+    .package-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid #ffe4ec}
+    .package-item:last-child{border-bottom:none}
+    .package-icon{font-size:24px}
+    .package-item div{font-size:14px}
+    .package-item div:first-child{font-weight:700;color:#333}
+    .package-item div:last-child{color:#888;font-size:12px}
+
+    /* Comparison Slider */
+    .comparison-slider{position:relative;width:100%;max-width:500px;margin:0 auto;border-radius:var(--r);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.2);background:#000;user-select:none;border:3px solid #ff6b9d;cursor:ew-resize}
+    .comparison-slider-inner{position:relative;width:100%;height:250px;overflow:hidden}
+    .comparison-image{position:absolute;top:0;left:0;width:100%;height:100%}
+    .comparison-image-before{position:absolute;top:0;left:0;width:50%;height:100%;overflow:hidden;z-index:2;border-right:4px solid #fff;box-shadow:5px 0 20px rgba(0,0,0,.3);transition:width .1s ease-out}
+    .comparison-image-before .comparison-placeholder{width:500px;height:100%;max-width:none}
+    .comparison-image-after{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1}
+    .comparison-image-after .comparison-placeholder{width:100%;height:100%}
+    .comparison-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;width:44px;height:44px;background:linear-gradient(135deg,#ff6b9d,#c44569);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:grab;box-shadow:0 4px 20px rgba(0,0,0,.4);touch-action:none;border:3px solid #fff;pointer-events:auto}
+    .comparison-handle:active{cursor:grabbing}
+    .comparison-handle::before{content:"↔";font-size:18px;font-weight:700;color:#fff}
+    .comparison-label{position:absolute;bottom:12px;padding:6px 12px;color:#fff;font-weight:700;font-size:12px;border-radius:6px;z-index:5;pointer-events:none}
+    .comparison-label-ours{left:12px;background:linear-gradient(135deg,#ff6b9d,#c44569)}
+    .comparison-label-theirs{right:12px;background:#555}
+    .comparison-slider.dragging .comparison-handle{transform:translate(-50%,-50%) scale(1.1)}
+
+    /* Policy - Easter Theme */
+    .section{margin-top:40px}
+    .section-header{margin-bottom:16px}
+    .h2{margin:0;font-size:22px;font-weight:800;color:#c44569}
+    .section-meta{color:#ff6b9d;font-size:12px;margin-top:4px;font-weight:600}
+    .policy-grid{display:grid;gap:10px}
+    .policy-card{background:linear-gradient(135deg,#fff,#fff5f7);border:2px solid #ffe4ec;border-radius:var(--r);padding:14px;text-align:center;transition:all .2s}
+    .policy-card:hover{border-color:#ff6b9d;transform:translateY(-3px);box-shadow:0 8px 25px rgba(255,107,157,.15)}
+    .policy-icon{font-size:32px;margin-bottom:8px}
+    .policy-title{font-weight:700;font-size:14px;margin-bottom:4px;color:#c44569}
+    .policy-text{color:var(--muted);font-size:11px;line-height:1.5}
+    .policy-text b{color:#ff6b9d}
+
+    /* Reviews - Easter Theme */
+    .reviews-summary{background:linear-gradient(135deg,#ff6b9d,#c44569);color:#fff;border-radius:var(--r);padding:16px;margin-bottom:14px}
+    .reviews-grid{display:grid;gap:16px}
+    .review-card{background:#fff;border:2px solid #ffe4ec;border-radius:var(--r);padding:14px}
+    .review-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .reviewer{display:flex;align-items:center;gap:8px}
+    .reviewer-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#ff6b9d,#c44569);color:#fff;display:grid;place-items:center;font-weight:700;font-size:12px}
+    .reviewer-name{font-weight:600;font-size:13px}
+    .review-date{color:#999;font-size:11px}
+    .review-stars{color:#fbbf24;font-size:13px;margin-bottom:6px}
+    .review-text{color:#666;font-size:12px;line-height:1.5}
+    .verified-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;color:#22c55e;background:#dcfce7;padding:2px 6px;border-radius:var(--pill);margin-left:6px}
+    .reviews-summary-top{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+    .review-big-rating{font-size:42px;font-weight:800;line-height:1}
+    .review-big-stars{color:#fbbf24;font-size:16px}
+    .review-count{color:rgba(255,255,255,.7);font-size:12px;margin-top:4px}
+    .rating-bars{display:grid;gap:5px}
+    .rating-bar{display:flex;align-items:center;gap:6px;font-size:10px}
+    .rating-bar span:first-child{width:18px}
+    .rating-bar span:last-child{width:24px;text-align:right;color:rgba(255,255,255,.6)}
+    .bar{flex:1;height:5px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden}
+    .bar-fill{height:100%;background:var(--success);border-radius:999px}
+
+    .reviews-list{display:grid;gap:10px}
+    .review-card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px}
+    .review-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .reviewer{display:flex;align-items:center;gap:8px}
+    .reviewer-avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-size:12px}
+    .reviewer-name{font-weight:600;font-size:13px}
+    .review-date{color:var(--muted);font-size:11px}
+    .review-stars{color:#fbbf24;font-size:13px;margin-bottom:6px}
+    .review-text{color:var(--muted);font-size:12px;line-height:1.5}
+    .verified-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;color:var(--success);background:#dcfce7;padding:2px 6px;border-radius:var(--pill);margin-left:6px}
+
+    .show-all-btn{width:100%;padding:12px;background:linear-gradient(135deg,#fff,#fff5f7);border:2px solid #ff6b9d;border-radius:var(--pill);font-weight:600;font-size:13px;cursor:pointer;margin-top:14px;transition:all .2s;color:#c44569}
+    .show-all-btn:hover{background:linear-gradient(135deg,#ff6b9d,#c44569);color:#fff;border-color:#c44569}
+
+    /* FAQ - Easter Theme */
+    .faq-grid{display:grid;gap:10px}
+    .faq-item{background:linear-gradient(135deg,#fff,#fff5f7);border:2px solid #ffe4ec;border-radius:14px;margin-bottom:8px;overflow:hidden;transition:all .2s}
+    .faq-item:hover{border-color:#ff6b9d}
+    summary{cursor:pointer;padding:14px;font-weight:600;font-size:13px;list-style:none;display:flex;justify-content:space-between;align-items:center;color:#c44569}
+    summary::-webkit-details-marker{display:none}
+    summary::after{content:"+";font-size:18px;color:#ff6b9d}
+    .faq-item[open] summary::after{content:"−"}
+    .faq-item[open] summary{color:#ff6b9d}
+    .faq-content{padding:0 14px 14px;color:#666;font-size:12px;line-height:1.6}
+
+    /* Cart Drawer - Modern Design */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s;z-index:200;backdrop-filter:blur(4px)}
+    .overlay.show{opacity:1;pointer-events:auto}
+    .drawer{position:fixed;top:0;right:-100%;width:100%;max-width:420px;height:100vh;background:#fff;transition:right .35s cubic-bezier(0.4, 0, 0.2, 1);z-index:210;display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.15)}
+    .drawer.show{right:0}
+    .drawer-header{padding:20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:#fff}
+    .drawer-title{font-size:20px;font-weight:800;display:flex;align-items:center;gap:10px}
+    .drawer-title::before{content:"🛒";font-size:22px}
+    .close-btn{width:44px;height:44px;border-radius:14px;border:none;background:#f0f4f8;display:grid;place-items:center;cursor:pointer;font-size:20px;transition:all .2s}
+    .close-btn:hover{background:#e8f4fd}
+    .drawer-body{flex:1;padding:20px;overflow:auto}
+    .cart-empty{text-align:center;padding:60px 20px;color:var(--muted)}
+    .cart-empty-icon{font-size:80px;margin-bottom:20px;opacity:.6}
+    .browse-btn{margin-top:20px;padding:14px 28px;background:var(--accent);color:#fff;border:none;border-radius:var(--pill);font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 4px 16px rgba(0,113,227,.3)}
+
+    .cart-item{display:flex;gap:16px;padding:18px;background:#fff;border-radius:20px;margin-bottom:16px;border:1px solid var(--line);box-shadow:0 2px 12px rgba(0,0,0,.04);position:relative}
+    .cart-item-img{width:72px;height:72px;background:linear-gradient(135deg,#f8f9fb,#fff);border-radius:16px;display:grid;place-items:center;border:1px solid var(--line)}
+    .cart-item-img img{width:52px;height:52px;object-fit:contain}
+    .cart-item-info{flex:1}
+    .cart-item-title{font-weight:700;font-size:15px;margin-bottom:4px}
+    .cart-item-meta{color:var(--muted);font-size:12px;margin-bottom:8px}
+    .cart-item-price{font-weight:800;color:var(--accent);font-size:16px}
+    .qty-control{display:inline-flex;align-items:center;gap:8px;background:#f8f9fb;border:1px solid var(--line);padding:4px;border-radius:var(--pill);margin-top:10px}
+    .qty-btn{width:32px;height:32px;border-radius:50%;border:none;background:#fff;display:grid;place-items:center;cursor:pointer;font-weight:700;font-size:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);transition:all .2s}
+    .qty-btn:hover{background:var(--accent-light)}
+    .qty-btn:active{transform:scale(.95)}
+    .qty-value{font-weight:800;min-width:24px;text-align:center;font-size:15px}
+
+    /* Remove from cart button */
+    .remove-btn{position:absolute;top:12px;right:12px;width:32px;height:32px;border:none;background:#fee2e2;color:var(--danger);border-radius:8px;cursor:pointer;display:grid;place-items:center;font-size:16px;transition:all .2s}
+    .remove-btn:hover{background:var(--danger);color:#fff}
+
+    /* Promo - Easter Theme */
+    .promo-section{background:linear-gradient(135deg,#fff5f7,#ffe4ec);border:2px solid #ff6b9d;border-radius:12px;padding:12px;margin:14px 0}
+    .promo-input-group{display:flex;gap:6px}
+    .promo-input{flex:1;padding:10px 12px;border:2px solid #ffe4ec;border-radius:var(--pill);font-size:12px;outline:none}
+    .promo-input:focus{border-color:#ff6b9d}
+    .promo-btn{padding:10px 14px;background:linear-gradient(135deg,#ff6b9d,#c44569);color:#fff;border:none;border-radius:var(--pill);font-weight:600;font-size:12px;cursor:pointer}
+    .promo-btn:hover{background:linear-gradient(135deg,#c44569,#ff6b9d)}
+    .promo-message{font-size:11px;margin-top:6px}
+    .promo-success{color:#22c55e;font-weight:700}
+    .promo-error{color:var(--danger)}
+    .discount-row{display:flex;justify-content:space-between;color:#22c55e;font-size:12px;font-weight:700;margin-top:6px;padding-top:6px;border-top:1px dashed #ffe4ec}
+
+    .drawer-footer{padding:20px;border-top:2px solid #ffe4ec;background:#fff}
+    .cart-total{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;font-size:16px}
+    .cart-total-price{font-weight:800;font-size:24px;background:linear-gradient(135deg,#22c55e,#16a34a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .cart-total-original{text-decoration:line-through;color:#999;font-size:14px;margin-right:8px}
+
+    /* Order Modal */
+    .modal{position:fixed;inset:0;display:none;place-items:center;padding:16px;background:rgba(0,0,0,.6);z-index:220;opacity:0;transition:opacity .3s}
+    .modal.show{display:grid;opacity:1}
+    .modal-content{width:100%;max-width:500px;max-height:90vh;overflow:auto;background:#fff;border-radius:var(--r)}
+    .modal-header{padding:16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:10}
+    .modal-title{font-size:18px;font-weight:700;margin:0}
+    .modal-body{padding:16px}
+
+    .order-summary{background:#f8f9fb;border-radius:12px;padding:14px;margin-bottom:16px}
+    .summary-row{display:flex;justify-content:space-between;margin-bottom:10px;font-size:13px}
+    .summary-row:last-child{margin-bottom:0;padding-top:10px;border-top:1px solid var(--line);font-weight:700;font-size:15px}
+    .summary-row.delivery-row{color:var(--success)}
+    .summary-row.delivery-row.calculated{color:var(--success)}
+
+    .form-group{margin-bottom:12px;position:relative}
+    .form-label{display:block;font-weight:600;font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase}
+    .form-input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);font-size:14px;outline:none}
+    .form-input:focus{border-color:var(--accent)}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+    /* Econt Delivery Widget */
+    .econt-delivery-widget{background:#fff;border:2px solid var(--accent);border-radius:16px;padding:16px;margin-bottom:16px}
+    .econt-delivery-header{display:flex;align-items:center;gap:8px;margin-bottom:16px;color:var(--accent);font-weight:700;font-size:15px}
+    .econt-delivery-header .truck-icon{font-size:20px}
+    
+    .delivery-tabs{display:flex;gap:10px;margin-bottom:16px}
+    .delivery-tab{flex:1;padding:14px 10px;border:2px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;text-align:center;transition:all .2s}
+    .delivery-tab:hover{border-color:var(--accent-light)}
+    .delivery-tab.active{border-color:var(--accent);background:var(--accent-light)}
+    .delivery-tab .tab-icon{font-size:24px;margin-bottom:6px;display:block}
+    .delivery-tab .tab-title{font-size:13px;font-weight:600;color:var(--text)}
+    .delivery-tab .tab-subtitle{font-size:11px;color:var(--muted);margin-top:2px}
+    
+    .delivery-fields{display:none;margin-top:16px}
+    .delivery-fields.show{display:block}
+    
+    .delivery-field{margin-bottom:12px}
+    .delivery-field-label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:500}
+    .delivery-field-input{width:100%;padding:14px 16px;border:2px solid var(--line);border-radius:12px;font-size:14px;outline:none;transition:border-color .2s;background:#fff}
+    .delivery-field-input:focus{border-color:var(--accent)}
+    .delivery-field-input::placeholder{color:var(--muted)}
+
+    /* Success */
+    .success-content{text-align:center;padding:28px 20px}
+    .success-icon{width:60px;height:60px;background:var(--success);color:#fff;border-radius:50%;display:grid;place-items:center;font-size:30px;margin:0 auto 16px}
+    .success-title{font-size:22px;font-weight:800;margin-bottom:10px}
+    .success-text{color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:20px}
+
+    /* Toast */
+    .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--text);color:#fff;
+      padding:12px 18px;border-radius:var(--pill);font-weight:600;opacity:0;transition:all .3s;z-index:250;display:flex;align-items:center;gap:8px;font-size:13px}
+    .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+    .toast-success{background:var(--success)}
+    .toast-error{background:var(--danger)}
+
+    /* FAB - Easter Theme */
+    .fab{position:fixed;right:16px;bottom:16px;z-index:90;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+    .fab-btn{background:linear-gradient(135deg,#ff6b9d,#c44569);color:#fff;padding:12px 18px;border-radius:var(--pill);font-weight:600;font-size:13px;
+      box-shadow:0 4px 20px rgba(255,107,157,.4);display:flex;align-items:center;gap:8px;border:none;cursor:pointer}
+    .fab-btn:hover{background:linear-gradient(135deg,#c44569,#ff6b9d);transform:translateY(-2px);box-shadow:0 6px 25px rgba(255,107,157,.5)}
+    .fab-phone{background:#fff;color:#c44569;border:2px solid #ff6b9d}
+    .fab-phone:hover{background:#ffe4ec}
+
+    /* Footer Styles - Easter Theme */
+    .footer{background:linear-gradient(135deg,#c44569,#ff6b9d);color:#fff;padding:40px 20px 30px;margin-top:40px;border-radius:24px 24px 0 0}
+    .footer-content{max-width:1200px;margin:0 auto}
+    .footer-grid{display:grid;gap:30px;margin-bottom:30px}
+    .footer-section{text-align:center}
+    .footer-title{font-weight:700;font-size:14px;margin-bottom:12px;color:#fff}
+    .footer-links{display:flex;flex-direction:column;gap:10px}
+    .footer-link{color:rgba(255,255,255,.85);font-size:13px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+    .footer-link:hover{color:#fff}
+    .footer-socials{display:flex;justify-content:center;gap:16px;margin-top:12px}
+    .social-btn{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.2);display:grid;place-items:center;transition:all .2s}
+    .social-btn:hover{background:#fff;color:#c44569;transform:translateY(-3px)}
+    .social-btn:hover svg{fill:#c44569}
+    .social-btn svg{width:20px;height:20px;fill:#fff}
+    .footer-bottom{text-align:center;padding-top:24px;border-top:1px solid rgba(255,255,255,.2)}
+    .footer-terms{font-size:12px;color:rgba(255,255,255,.9);line-height:1.8;background:rgba(255,255,255,.15);padding:16px;border-radius:12px;margin-bottom:16px}
+    .footer-terms strong{color:#fff;display:block;margin-bottom:8px;font-size:13px}
+    .footer-terms a{color:#c44569;background:#fff;padding:8px 16px;border-radius:20px;text-decoration:none;display:inline-block;margin-top:10px;font-weight:600;transition:all .2s}
+    .footer-terms a:hover{background:#ffe4ec;transform:translateY(-2px)}
+    .footer-copyright{font-size:12px;color:rgba(255,255,255,.8);margin-top:12px}
+
+    /* Desktop */
+    @media (min-width: 768px){
+      .topin{padding:16px 24px}
+      .logo-text{display:block}
+      .pill{font-size:13px;padding:8px 16px}
+      .wrap{padding:30px 24px 100px}
+      .hero{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;padding:30px 0}
+      .product-showcase{margin-bottom:0}
+      .img-wrap img{max-width:320px}
+      h1{font-size:36px}
+      .hero-desc{font-size:15px}
+      .price-current{font-size:38px}
+      .policy-grid{grid-template-columns:repeat(3,1fr)}
+      .comparison-table{font-size:14px}
+      .comparison-table th,.comparison-table td{padding:14px}
+      .reviews-grid{display:grid;grid-template-columns:280px 1fr;gap:20px}
+      .reviews-list{grid-template-columns:repeat(2,1fr)}
+      .fab{right:24px;bottom:24px}
+      .footer-grid{grid-template-columns:repeat(3,1fr);text-align:left}
+      .footer-section{text-align:left}
+      .footer-link{justify-content:flex-start}
+      .footer-socials{justify-content:flex-start}
+    }
+
+    img[loading="lazy"]{opacity:0;transition:opacity .3s}
+    img[loading="lazy"].loaded{opacity:1}
+  </style>
+</head>
+<body>
+
+  <!-- Hidden Netlify Form -->
+  <form name="order" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="hidden" name="form-name" value="order" />
+    <input type="hidden" name="bot-field" />
+    <input type="text" name="fullname" />
+    <input type="tel" name="phone" />
+    <input type="text" name="city" />
+    <input type="text" name="delivery_type" />
+    <input type="text" name="delivery_address" />
+    <input type="number" name="qty" />
+    <input type="text" name="total_bgn" />
+    <input type="text" name="total_eur" />
+    <input type="text" name="note" />
+    <input type="text" name="promo_code" />
+    <input type="text" name="discount_applied" />
+  </form>
+
+  <!-- Easter Header Banner - News Ticker -->
+  <div class="easter-header">
+    <div class="easter-ticker-wrap">
+      <div class="easter-ticker">
+        <span class="easter-ticker-item">🐰 Великденско намаление: промокод: <span class="easter-header-code">EASTER15</span> за 15% отстъпка! 🥚</span>
+        <span class="easter-ticker-item">🐰 Великденско намаление: промокод: <span class="easter-header-code">EASTER15</span> за 15% отстъпка! 🥚</span>
+        <span class="easter-ticker-item">🐰 Великденско намаление: промокод: <span class="easter-header-code">EASTER15</span> за 15% отстъпка! 🥚</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Navigation -->
+  <div class="top" id="topBar">
+    <div class="topin">
+      <div class="logo">
+        <span class="logo-text">
+          <span class="logo-air">Air</span><span class="logo-store" style="position:relative">Store<span style="position:relative;display:inline-block">B<span style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:18px;animation:bounceEgg 1.2s ease-in-out infinite;z-index:10">🐣</span></span>ulgaria</span>
+        </span>
+      </div>
+      <button class="icon-btn" onclick="openCart()">
+        🛒
+        <span class="cart-badge" id="cartBadge">0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="wrap">
+    
+    <!-- Hero Section - PRODUCT IMAGE FIRST -->
+    <section class="hero">
+      
+      <!-- LEFT: Product Image (FIRST - for better conversion) -->
+      <div class="hero-visual">
+        <div class="product-showcase">
+          <div class="img-wrap">
+            <div class="discount-badge">-38% OFF</div>
+            <img id="mainImg" src="assets/airpods.png" alt="AirPods Pro 3" style="width:100%;max-width:300px;height:auto;cursor:zoom-in" onclick="openLightbox()" />
+          </div>
+          <div class="gallery">
+            <button class="th active" onclick="changeImage(this, 'assets/airpods.png')">
+              <img src="assets/airpods.png" alt="" style="width:100%;height:100%;object-fit:cover" />
+            </button>
+            <button class="th" onclick="changeImage(this, 'assets/airpods_2.png')">
+              <img src="assets/airpods_2.png" alt="" style="width:100%;height:100%;object-fit:cover" />
+            </button>
+            <button class="th" onclick="changeImage(this, 'assets/airpods_3.png')">
+              <img src="assets/airpods_3.png" alt="" style="width:100%;height:100%;object-fit:cover" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Product Info & Price -->
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="live-dot"></span>
+          <span id="viewerCount">12</span> души разглеждат
+        </div>
+        <h1>AirPods Pro 3</h1>
+        <p class="hero-desc">Премиум звук с активно шумопотискане, персонализирано пространствено аудио и до 30 часа време за работа.</p>
+
+        <!-- Easter Promo Banner -->
+        <div class="easter-promo-banner">
+          <div class="easter-promo-title">🐰 Великденска промоция! 🥚</div>
+          <div class="easter-promo-text">Използвай промо кода</div>
+          <div class="easter-promo-code">EASTER15</div>
+          <div class="easter-promo-discount">и получи <span>-15%</span> отстъпка!</div>
+        </div>
+
+        <!-- Out of Stock Banner (hidden by default) -->
+        <div class="out-of-stock-banner" id="outOfStockBanner" style="display:none">
+          <span class="oos-icon">📦</span>
+          <div class="oos-title">В момента нямаме наличност</div>
+          <div class="oos-subtitle">AirPods Pro 3 са временно изчерпани</div>
+          <div class="oos-restock">
+            <div class="oos-restock-title">🔄 Проверете отново по-късно</div>
+            <div class="oos-restock-text">Очаквайте нова доставка скоро!</div>
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div class="price-box">
+          <div class="price-row">
+            <div class="price-current">€ <span id="priceNowEur">55.00</span></div>
+            <div class="price-old">€ <span id="oldPriceEur">89.00</span></div>
+            <div class="price-save">-38%</div>
+          </div>
+          <div class="price-dual">
+            <span>🇧🇬 <span id="priceNowBgn">108</span> лв</span>
+            <span style="text-decoration:line-through;opacity:.5">🇧🇬 <span id="oldPriceBgn">174</span> лв</span>
+          </div>
+        </div>
+
+        <!-- Features -->
+        <div class="features-list">
+          <div class="feature-item">
+            <div class="feature-icon">💳</div>
+            <div class="feature-text">
+              <b>Наложен платеж</b>
+              <small>Плащаш при получаване</small>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">📦</div>
+            <div class="feature-text">
+              <b>Преглед + тест</b>
+              <small>Проверка при куриера</small>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🚚</div>
+            <div class="feature-text">
+              <b>Безплатна доставка</b>
+              <small>С Еконт до цяла България</small>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-accent" id="addToCartBtn" onclick="addToCart()" style="margin-top:12px">
+          🛒 Добави в кошницата
+        </button>
+        <button class="btn btn-disabled" id="outOfStockBtn" style="margin-top:12px;display:none" disabled>
+          ⏸️ Няма наличност
+        </button>
+
+        <!-- Package Contents -->
+        <div class="package" style="margin-top:20px">
+          <div class="package-title">
+            <span>📦 В комплекта</span>
+            <span>Всичко необходимо</span>
+          </div>
+          <div class="package-item">
+            <span class="package-icon">🎧</span>
+            <div>
+              <div>AirPods Pro 3</div>
+              <div>С MagSafe кейс</div>
+            </div>
+          </div>
+          <div class="package-item">
+            <span class="package-icon">🧩</span>
+            <div>
+              <div>4 размера тапички</div>
+              <div>XS, S, M, L</div>
+            </div>
+          </div>
+          <div class="package-item">
+            <span class="package-icon">🛡️</span>
+            <div>
+              <div>6 месеца гаранция</div>
+              <div>Оторизиран сервиз</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Comparison Slider -->
+    <section class="section reveal">
+      <div class="section-header">
+        <h2 class="h2">Сравнение с оригинала</h2>
+        <div class="section-meta">Плъзнете, за да видите разликата</div>
+      </div>
+      <div class="comparison-slider" id="comparisonSlider">
+        <div class="comparison-slider-inner">
+          <div class="comparison-image-after">
+            <img src="assets/theirs.png" alt="Техните" style="width:100%;height:100%;object-fit:cover" />
+          </div>
+          <div class="comparison-image-before" id="beforeImage">
+            <img src="assets/ours.png" alt="Нашите" style="width:200%;height:100%;object-fit:cover" />
+          </div>
+          <div class="comparison-handle" id="sliderHandle"></div>
+          <div class="comparison-label comparison-label-ours">НАШИТЕ - 108лв</div>
+          <div class="comparison-label comparison-label-theirs">ТЕХНИТЕ - 150лв</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Policy Section -->
+    <section class="section reveal">
+      <div class="section-header">
+        <h2 class="h2">Нашите гаранции</h2>
+        <div class="section-meta">Пазарувайте с пълно спокойствие</div>
+      </div>
+      <div class="policy-grid">
+        <div class="policy-card">
+          <div class="policy-icon">💰</div>
+          <div class="policy-title">30 дни връщане</div>
+          <div class="policy-text"><b>Пълно възстановяване</b> ако продуктът е повреден</div>
+        </div>
+        <div class="policy-card">
+          <div class="policy-icon">📦</div>
+          <div class="policy-title">Преглед и тест</div>
+          <div class="policy-text"><b>Проверете при куриера</b> преди плащане</div>
+        </div>
+        <div class="policy-card">
+          <div class="policy-icon">🛡️</div>
+          <div class="policy-title">6 месеца гаранция</div>
+          <div class="policy-text"><b>Оторизиран сервиз</b> - безплатна замяна</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="section reveal">
+      <div class="section-header">
+        <h2 class="h2">Отзиви от клиенти</h2>
+        <div class="section-meta">Вижте какво казват нашите доволни клиенти</div>
+      </div>
+      
+      <div class="reviews-grid">
+        <div class="reviews-summary">
+          <div class="reviews-summary-top">
+            <div>
+              <div class="review-big-rating" id="avgRating">4.9</div>
+              <div class="review-big-stars">★★★★★</div>
+            </div>
+            <div>
+              <div class="review-count"><span id="totalReviews">312</span> отзива</div>
+              <div class="review-count"><span id="recommendPercent">96%</span> препоръчват</div>
+            </div>
+          </div>
+          <div class="rating-bars">
+            <div class="rating-bar"><span>5★</span><div class="bar"><div class="bar-fill" style="width:92%"></div></div><span>287</span></div>
+            <div class="rating-bar"><span>4★</span><div class="bar"><div class="bar-fill" style="width:6%"></div></div><span>19</span></div>
+            <div class="rating-bar"><span>3★</span><div class="bar"><div class="bar-fill" style="width:1%"></div></div><span>4</span></div>
+            <div class="rating-bar"><span>2★</span><div class="bar"><div class="bar-fill" style="width:0%"></div></div><span>1</span></div>
+            <div class="rating-bar"><span>1★</span><div class="bar"><div class="bar-fill" style="width:0%"></div></div><span>1</span></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="reviews-list" id="reviewsList"></div>
+          <button class="show-all-btn" onclick="openAllReviews()">📋 Виж всички отзиви</button>
+        </div>
+      </div>
+
+      <div class="add-review-card" style="background:linear-gradient(135deg,#fff5f7,#ffe4ec);border:2px dashed #ff6b9d;border-radius:var(--r);padding:20px;text-align:center;margin-top:16px">
+        <button class="add-review-btn" onclick="openReviewModal()" style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#ff6b9d,#c44569);color:#fff;font-size:24px;display:grid;place-items:center;margin:0 auto 12px;cursor:pointer;border:none;box-shadow:0 4px 15px rgba(255,107,157,.4)">+</button>
+        <div style="font-weight:700;margin-bottom:4px;color:#c44569">Споделете вашето мнение</div>
+        <div style="color:#888;font-size:13px">Помогнете на други клиенти</div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section reveal">
+      <div class="section-header">
+        <h2 class="h2">Често задавани въпроси</h2>
+      </div>
+      <div class="faq-grid">
+        <details class="faq-item">
+          <summary>⭐ Защо да изберете AIRSTORE?</summary>
+          <div class="faq-content"><b>Най-добрата цена в България!</b> 💯<br><br>
+          ✈️ <b>Директен внос</b> — без посредници = по-ниски цени<br>
+          🚚 <b>Безплатна доставка</b> с Еконт до цяла България<br>
+          💳 <b>Наложен платеж</b> — плащаш при получаване<br>
+          📦 <b>Преглед и тест</b> — проверяваш преди да платиш<br>
+          🛡️ <b>6 месеца гаранция</b> — безплатна замяна при проблем<br>
+          🔄 <b>30 дни връщане</b> — пълно възстановяване<br><br>
+          <b>Хиляди доволни клиенти</b> ни се довериха! 🎉</div>
+        </details>
+        <details class="faq-item">
+          <summary>🎧 Имат ли Noise Cancellation, Transparency и Adaptive?</summary>
+          <div class="faq-content"><b>Да! 🎉</b> Поддържат всички 3 режима като оригиналните:<br><br>
+          🔇 <b>Active Noise Cancellation (ANC)</b> — Потиска външния шум за потапящо аудио изживяване<br>
+          🔊 <b>Transparency Mode</b> — Чуваш околния свят без да сваляш слушалките<br>
+          ⚡ <b>Adaptive Audio</b> — Автоматично превключва между режимите според средата<br><br>
+          Контролирай всичко директно от Control Center на iPhone или със задържане на стъблото!</div>
+        </details>
+        <details class="faq-item">
+          <summary>Има ли преглед и тест преди плащане?</summary>
+          <div class="faq-content"><b>Да</b> — имате право на преглед и тест при получаване. Можете да проверите опаковката и работоспособността преди да платите.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Колко струва доставката?</summary>
+          <div class="faq-content"><b>Безплатна!</b> Доставяме безплатно с Еконт до цяла България.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Каква гаранция предлагате?</summary>
+          <div class="faq-content"><b>6 месеца гаранция</b> при оторизирани сервизи на Apple. При проблем — безплатна замяна или ремонт.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Какво е условието за връщане?</summary>
+          <div class="faq-content"><b>30 дни пълно възстановяване</b> — ако продуктът е повреден или не работи правилно, върнете го за пълно възстановяване.</div>
+        </details>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-grid">
+        <!-- Contact Section -->
+        <div class="footer-section">
+          <div class="footer-title">📞 Свържете се с нас</div>
+          <div class="footer-links">
+            <a href="tel:0878460279" class="footer-link">📱 0878 460 279</a>
+            <a href="mailto:info@airstore.bg" class="footer-link">✉️ info@airstore.bg</a>
+          </div>
+        </div>
+
+        <!-- Social Media Section -->
+        <div class="footer-section">
+          <div class="footer-title">🌐 Последвайте ни</div>
+          <div class="footer-socials">
+            <a href="https://instagram.com/airstore.bg" target="_blank" class="social-btn" title="Instagram">
+              <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+            <a href="https://tiktok.com/@airstore.bg" target="_blank" class="social-btn" title="TikTok">
+              <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Working Hours Section -->
+        <div class="footer-section">
+          <div class="footer-title">🕐 Работно време</div>
+          <div class="footer-links">
+            <span class="footer-link">Пон - Пет: 9:00 - 18:00</span>
+            <span class="footer-link">Съб - Нед: Почивни дни</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-terms">
+          <strong>📋 Общи условия</strong>
+          Всички поръчки се обработват в рамките на 1-2 работни дни. 
+          Доставката се извършва с куриерска фирма Еконт. При поръчка над 100 лв. доставката е безплатна. 
+          Предоставяте правото на връщане в срок от 14 дни според ЗЗП. 
+          Продуктите се предлагат с 6 месеца гаранция.
+          <a href="terms.html">📖 Виж пълните условия</a>
+        </div>
+        <div class="footer-copyright">
+          © 2025 AirStore Bulgaria. Всички права запазени.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cart Drawer -->
+  <div class="overlay" id="overlay" onclick="closeCart()"></div>
+  <aside class="drawer" id="drawer">
+    <div class="drawer-header">
+      <div class="drawer-title">Кошница</div>
+      <button class="close-btn" onclick="closeCart()">✕</button>
+    </div>
+    <div class="drawer-body" id="drawerBody">
+      <div class="cart-empty" id="emptyCart">
+        <div class="cart-empty-icon">🛒</div>
+        <div style="font-weight:700;margin-bottom:8px">Кошницата е празна</div>
+        <div style="font-size:14px">Добавете продукти, за да продължите</div>
+        <button class="browse-btn" onclick="closeCart()">Разгледай продукти</button>
+      </div>
+      <div id="cartContent" style="display:none">
+        <div class="cart-item">
+          <button class="remove-btn" onclick="removeFromCart()" title="Премахни">🗑️</button>
+          <div class="cart-item-img" style="background:linear-gradient(135deg,#fff5f7,#ffe4ec);display:grid;place-items:center;border:2px solid #ffe4ec;border-radius:12px;overflow:hidden;min-width:70px;min-height:70px"><img src="assets/airpods_2.png" alt="AirPods Pro 3" style="width:52px;height:52px;object-fit:contain" /></div>
+          <div class="cart-item-info">
+            <div class="cart-item-title">AirPods Pro 3</div>
+            <div class="cart-item-meta">Бял • MagSafe кейс</div>
+            <div class="cart-item-price">€ <span id="cartItemPrice">55.00</span></div>
+            <div class="qty-control">
+              <button class="qty-btn" onclick="updateQty(-1)">−</button>
+              <span class="qty-value" id="qtyValue">1</span>
+              <button class="qty-btn" onclick="updateQty(1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="promo-section">
+          <div style="font-weight:600;margin-bottom:8px;font-size:13px">🎁 Промо код?</div>
+          <div class="promo-input-group">
+            <input type="text" class="promo-input" id="promoInput" placeholder="EASTER15" maxlength="10">
+            <button class="promo-btn" id="promoBtn" onclick="applyPromo()">Приложи</button>
+          </div>
+          <div id="promoMessage"></div>
+          <div class="discount-row" id="discountRow" style="display:none">
+            <span>Отстъпка (10%):</span><span>-€ <span id="discountAmount">0.00</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-footer" id="drawerFooter" style="display:none">
+      <div class="cart-total">
+        <span>Общо:</span>
+        <div>
+          <span class="cart-total-original" id="originalTotal" style="display:none">€ <span id="originalTotalEur">55.00</span></span>
+          <span class="cart-total-price">€ <span id="totalEur">55.00</span></span>
+        </div>
+      </div>
+      <button class="btn btn-accent" onclick="openOrder()">✅ Поръчай сега</button>
+    </div>
+  </aside>
+
+  <!-- Order Modal -->
+  <div class="modal" id="orderModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">📝 Завърши поръчка</h3>
+        <button class="close-btn" onclick="closeOrder()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="order-summary">
+          <div class="summary-row"><span>Продукт:</span><span>AirPods Pro 3 x<span id="orderQty">1</span></span></div>
+          <div class="summary-row" id="orderDiscountRow" style="display:none"><span>Отстъпка:</span><span style="color:var(--success)">-10%</span></div>
+          <div class="summary-row delivery-row" id="deliverySummaryRow">
+            <span>Доставка (Еконт):</span>
+            <span id="deliveryStatusText" style="color:var(--muted)">Изберете доставка</span>
+          </div>
+          <div class="summary-row"><span>Общо:</span><span>€ <span id="orderTotalEur">55.00</span></span></div>
+        </div>
+        
+        <form id="orderForm" onsubmit="submitOrder(event)">
+          <p class="honeypot"><label>Don't fill: <input name="bot-field" /></label></p>
+          <input type="hidden" name="form-name" value="order" />
+          <input type="hidden" id="formQty" name="qty" value="1" />
+          <input type="hidden" id="formTotalBgn" name="total_bgn" value="108" />
+          <input type="hidden" id="formTotalEur" name="total_eur" value="55.00" />
+          <input type="hidden" id="formPromoCode" name="promo_code" value="" />
+          <input type="hidden" id="formDiscountApplied" name="discount_applied" value="false" />
+          <input type="hidden" id="formDeliveryType" name="delivery_type" value="" />
+
+          <!-- Econt Delivery Widget -->
+          <div class="econt-delivery-widget">
+            <div class="econt-delivery-header">
+              <span class="truck-icon">🚚</span>
+              <span>Еконт Доставка</span>
+            </div>
+            
+            <!-- Delivery Tabs -->
+            <div class="delivery-tabs">
+              <div class="delivery-tab" id="tabOffice" onclick="selectDeliveryMethod('office')">
+                <span class="tab-icon">📍</span>
+                <div class="tab-title">До офис</div>
+                <div class="tab-subtitle">Най-евтино</div>
+              </div>
+              <div class="delivery-tab" id="tabAddress" onclick="selectDeliveryMethod('address')">
+                <span class="tab-icon">🏠</span>
+                <div class="tab-title">До адрес</div>
+                <div class="tab-subtitle">Удобно</div>
+              </div>
+            </div>
+            
+            <!-- Delivery Fields (hidden initially) -->
+            <div class="delivery-fields" id="deliveryFields">
+              <div class="delivery-field">
+                <label class="delivery-field-label">Въведете град за доставка *</label>
+                <input type="text" class="delivery-field-input" id="deliveryCity" name="city" placeholder="Например: София, Пловдив, Варна..." autocomplete="off" />
+              </div>
+              <div class="delivery-field" id="officeField">
+                <label class="delivery-field-label" id="secondFieldLabel">Въведете Адрес на Офис еконт *</label>
+                <input type="text" class="delivery-field-input" id="deliveryAddress" name="delivery_address" placeholder="" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">ИМЕ И ФАМИЛИЯ *</label>
+              <input type="text" class="form-input" name="fullname" placeholder="Иван Иванов" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">ТЕЛЕФОН *</label>
+              <input type="tel" class="form-input" name="phone" placeholder="08xxxxxxxx" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">БЕЛЕЖКА (ПО ЖЕЛАНИЕ)</label>
+            <input type="text" class="form-input" name="note" placeholder="Допълнителна информация..." />
+          </div>
+
+          <button type="submit" class="btn btn-accent" id="submitBtn" style="font-size:16px;padding:16px">
+            ✅ Изпрати поръчката
+          </button>
+          
+          <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--muted)">
+            🔒 Наложен платеж - плащаш при получаване
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div class="modal" id="lightboxModal" onclick="closeLightbox()">
+    <div class="modal-content lightbox-content" style="background:transparent;box-shadow:none;max-width:90vw" onclick="event.stopPropagation()">
+      <button class="close-btn" onclick="closeLightbox()" style="position:fixed;top:20px;right:20px;background:#fff;color:#333;z-index:1000">✕</button>
+      <img id="lightboxImage" src="assets/airpods.png" alt="AirPods Pro 3" style="max-width:100%;max-height:80vh;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.3)" />
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal" id="successModal">
+    <div class="modal-content success-content">
+      <div class="success-icon">✓</div>
+      <div class="success-title">Благодарим за поръчката!</div>
+      <div class="success-text">Очаквайте обаждане за потвърждение.<br>Проверете телефона си за SMS.</div>
+      <a href="tel:0878460279" class="btn btn-accent" style="margin-bottom:10px">📞 Обади се сега</a>
+      <button class="btn btn-outline" onclick="closeSuccess()">Затвори</button>
+    </div>
+  </div>
+
+  <!-- Review Modal -->
+  <div class="modal" id="reviewModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">⭐ Напиши отзив</h3>
+        <button class="close-btn" onclick="closeReviewModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="reviewForm" onsubmit="submitReview(event)">
+          <div class="form-group">
+            <label class="form-label">Твоето име</label>
+            <input type="text" class="form-input" id="reviewName" placeholder="Въведи име" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Оценка</label>
+            <div class="star-rating" id="starRating" style="display:flex;gap:8px;justify-content:center;font-size:28px;margin:12px 0">
+              <span data-rating="1" style="color:#e5e7eb;cursor:pointer">★</span>
+              <span data-rating="2" style="color:#e5e7eb;cursor:pointer">★</span>
+              <span data-rating="3" style="color:#e5e7eb;cursor:pointer">★</span>
+              <span data-rating="4" style="color:#e5e7eb;cursor:pointer">★</span>
+              <span data-rating="5" style="color:#e5e7eb;cursor:pointer">★</span>
+            </div>
+            <input type="hidden" id="reviewRating" value="5" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Отзив</label>
+            <textarea class="form-input" id="reviewText" rows="4" placeholder="Сподели мнение..." required style="resize:vertical;min-height:80px"></textarea>
+          </div>
+          <button type="submit" class="btn btn-accent">⭐ Изпрати отзив</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Reviews Modal -->
+  <div class="modal" id="allReviewsModal">
+    <div class="modal-content" style="max-height:80vh;overflow-y:auto">
+      <div class="modal-header" style="position:sticky;top:0;background:#fff;z-index:10;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:16px">
+        <h3 class="modal-title">📋 Всички отзиви</h3>
+        <button class="close-btn" onclick="closeAllReviews()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="allReviewsList" style="display:grid;gap:12px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"><span id="toastMessage">Съобщение</span></div>
+
+  <!-- Main Script -->
+  <script>
+    // ===== CONSTANTS =====
+    const FX_BGN_PER_EUR = 1.95583;
+    const PRICE_EUR = 55;
+    const PRICE_BGN = Math.round(PRICE_EUR * FX_BGN_PER_EUR);
+    const OLD_EUR = 89;
+    const VALID_PROMO_CODES = ['XVZ10', 'X7Y8Z9', 'P5Q6R7', 'M3N4O5', 'D8E9F0', 'SAVE10', 'AIR10', 'PROMO1', 'EASTER15'];
+
+    // ===== STATE =====
+    let qty = 1;
+    let cartHasItem = false;
+    let discountApplied = false;
+    let discountPercent = 10; // Default 10%
+    let currentPromoCode = '';
+    let currentRating = 5;
+    let stockCount = 50; // Available stock
+    let selectedDeliveryMethod = null;
+
+    // ===== INITIALIZE =====
+    function init() {
+      updatePrices();
+      loadReviews();
+      setupStarRating();
+      updateViewerCount();
+      initComparisonSlider();
+      updateStockDisplay();
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }
+
+    // ===== UPDATE STOCK DISPLAY =====
+    function updateStockDisplay() {
+      // Stock is available - show normal state
+      document.getElementById('outOfStockBanner').style.display = 'none';
+      document.getElementById('addToCartBtn').style.display = 'block';
+      document.getElementById('outOfStockBtn').style.display = 'none';
+    }
+
+    // ===== DELIVERY WIDGET =====
+    function selectDeliveryMethod(method) {
+      selectedDeliveryMethod = method;
+      
+      // Update tabs
+      document.getElementById('tabOffice').classList.toggle('active', method === 'office');
+      document.getElementById('tabAddress').classList.toggle('active', method === 'address');
+      
+      // Show fields
+      document.getElementById('deliveryFields').classList.add('show');
+      
+      // Update second field label and placeholder
+      const secondLabel = document.getElementById('secondFieldLabel');
+      const addressInput = document.getElementById('deliveryAddress');
+      
+      if (method === 'office') {
+        secondLabel.textContent = 'Въведете Адрес на Офис еконт *';
+        addressInput.placeholder = 'Например: Еконт София - Централен, ул. Тодор Александров 33';
+      } else {
+        secondLabel.textContent = 'Въведете точен адрес *';
+        addressInput.placeholder = 'Например: ул. Витоша 100, ап. 5';
+      }
+      
+      // Update form hidden field
+      document.getElementById('formDeliveryType').value = method;
+      
+      // Update summary
+      document.getElementById('deliveryStatusText').textContent = method === 'office' ? 'До офис - БЕЗПЛАТНА' : 'До адрес - БЕЗПЛАТНА';
+      document.getElementById('deliveryStatusText').style.color = 'var(--success)';
+    }
+
+    // ===== VIEWER COUNT =====
+    function updateViewerCount() {
+      setInterval(() => {
+        const count = Math.floor(Math.random() * 15) + 8;
+        document.getElementById('viewerCount').textContent = count;
+      }, 8000);
+    }
+
+    // ===== PRICE FUNCTIONS =====
+    function updatePrices() {
+      let totalEur = PRICE_EUR * qty;
+      let totalBgn = PRICE_BGN * qty;
+      
+      if (discountApplied) {
+        const discountMultiplier = (100 - discountPercent) / 100;
+        totalEur = totalEur * discountMultiplier;
+        totalBgn = Math.round(totalBgn * discountMultiplier);
+      }
+
+      document.getElementById('qtyValue').textContent = qty;
+      document.getElementById('cartBadge').textContent = qty;
+      document.getElementById('cartBadge').style.display = cartHasItem ? 'grid' : 'none';
+      document.getElementById('totalEur').textContent = totalEur.toFixed(2);
+      document.getElementById('orderQty').textContent = qty;
+      document.getElementById('orderTotalEur').textContent = totalEur.toFixed(2);
+      document.getElementById('formQty').value = qty;
+      document.getElementById('formTotalEur').value = totalEur.toFixed(2);
+      document.getElementById('formTotalBgn').value = totalBgn;
+      
+      if (discountApplied) {
+        const discountMultiplier = (100 - discountPercent) / 100;
+        document.getElementById('originalTotal').style.display = 'inline';
+        document.getElementById('originalTotalEur').textContent = (PRICE_EUR * qty).toFixed(2);
+        document.getElementById('discountAmount').textContent = (PRICE_EUR * qty * (1 - discountMultiplier)).toFixed(2);
+        document.getElementById('discountRow').style.display = 'flex';
+        document.getElementById('orderDiscountRow').style.display = 'flex';
+      }
+    }
+
+    function updateQty(change) {
+      qty = Math.max(1, Math.min(5, qty + change));
+      updatePrices();
+    }
+
+    // ===== FAST ORDER =====
+    function fastOrder() {
+      if (!cartHasItem) {
+        cartHasItem = true;
+        qty = 1;
+      }
+      updatePrices();
+      openOrder();
+      showToast('Бърза поръчка - попълнете данните!', 'success');
+    }
+
+    // ===== CART FUNCTIONS =====
+    function addToCart() {
+      if (!cartHasItem) {
+        cartHasItem = true;
+        const btn = document.getElementById('addToCartBtn');
+        btn.textContent = '✅ Добавено';
+        btn.classList.remove('btn-accent');
+        btn.classList.add('btn-success');
+        openCart();
+        showToast('Добавено в кошницата!', 'success');
+      } else {
+        openCart();
+      }
+    }
+
+    // ===== REMOVE FROM CART =====
+    function removeFromCart() {
+      cartHasItem = false;
+      qty = 1;
+      discountApplied = false;
+      discountPercent = 10;
+      currentPromoCode = '';
+      
+      // Reset promo
+      document.getElementById('promoInput').disabled = false;
+      document.getElementById('promoInput').value = '';
+      document.getElementById('promoBtn').textContent = 'Приложи';
+      document.getElementById('promoMessage').textContent = '';
+      document.getElementById('discountRow').style.display = 'none';
+      
+      // Reset add to cart button
+      const btn = document.getElementById('addToCartBtn');
+      btn.textContent = '🛒 Добави в кошницата';
+      btn.classList.remove('btn-success');
+      btn.classList.add('btn-accent');
+      
+      // Hide original total
+      document.getElementById('originalTotal').style.display = 'none';
+      document.getElementById('orderDiscountRow').style.display = 'none';
+      
+      updateCartDisplay();
+      closeCart();
+      showToast('Продуктът е премахнат от кошницата', 'success');
+    }
+
+    function openCart() {
+      document.getElementById('overlay').classList.add('show');
+      document.getElementById('drawer').classList.add('show');
+      document.body.style.overflow = 'hidden';
+      updateCartDisplay();
+    }
+
+    function closeCart() {
+      document.getElementById('overlay').classList.remove('show');
+      document.getElementById('drawer').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    function updateCartDisplay() {
+      if (cartHasItem) {
+        document.getElementById('emptyCart').style.display = 'none';
+        document.getElementById('cartContent').style.display = 'block';
+        document.getElementById('drawerFooter').style.display = 'block';
+      } else {
+        document.getElementById('emptyCart').style.display = 'block';
+        document.getElementById('cartContent').style.display = 'none';
+        document.getElementById('drawerFooter').style.display = 'none';
+      }
+      updatePrices();
+    }
+
+    // ===== PROMO CODE =====
+    function applyPromo() {
+      const input = document.getElementById('promoInput');
+      const code = input.value.toUpperCase().trim();
+      
+      if (!code) return showPromoMessage('Въведете код', 'error');
+      if (discountApplied) return showPromoMessage('Вече приложено', 'error');
+      
+      if (VALID_PROMO_CODES.includes(code)) {
+        discountApplied = true;
+        currentPromoCode = code;
+        // EASTER15 gives 15% off, others give 10%
+        discountPercent = (code === 'EASTER15') ? 15 : 10;
+        updatePrices();
+        showPromoMessage(`✓ ${discountPercent}% отстъпка приложена!`, 'success');
+        input.disabled = true;
+        document.getElementById('promoBtn').textContent = 'Приложено';
+        document.getElementById('formPromoCode').value = code;
+        document.getElementById('formDiscountApplied').value = 'true';
+      } else {
+        showPromoMessage('✗ Невалиден код', 'error');
+      }
+    }
+
+    function showPromoMessage(text, type) {
+      const msg = document.getElementById('promoMessage');
+      msg.textContent = text;
+      msg.className = 'promo-message ' + (type === 'success' ? 'promo-success' : 'promo-error');
+    }
+
+    // ===== ORDER MODAL =====
+    function openOrder() {
+      closeCart();
+      document.getElementById('orderModal').classList.add('show');
+      updatePrices();
+    }
+
+    function closeOrder() {
+      document.getElementById('orderModal').classList.remove('show');
+    }
+
+    // Submit order
+    async function submitOrder(e) {
+      e.preventDefault();
+      
+      const form = e.target;
+      const formData = new FormData(form);
+      
+      // Validate delivery method
+      if (!selectedDeliveryMethod) {
+        showToast('Моля изберете начин на доставка (До офис или До адрес)', 'error');
+        document.querySelector('.econt-delivery-widget').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      
+      // Validate city
+      const city = formData.get('city');
+      if (!city || !city.trim()) {
+        showToast('Моля въведете град за доставка', 'error');
+        document.getElementById('deliveryCity').focus();
+        return;
+      }
+      
+      // Validate address/office
+      const address = formData.get('delivery_address');
+      if (!address || !address.trim()) {
+        const fieldName = selectedDeliveryMethod === 'office' ? 'офис на Еконт' : 'адрес';
+        showToast(`Моля въведете ${fieldName}`, 'error');
+        document.getElementById('deliveryAddress').focus();
+        return;
+      }
+      
+      const btn = document.getElementById('submitBtn');
+      btn.textContent = 'Изпраща се...';
+      btn.disabled = true;
+      
+      const orderData = {
+        name: formData.get('fullname'),
+        phone: formData.get('phone'),
+        city: city.trim(),
+        deliveryType: selectedDeliveryMethod,
+        deliveryAddress: address.trim(),
+        qty: parseInt(qty) || 1,
+        totalEur: parseFloat(document.getElementById('orderTotalEur').textContent) || 0,
+        totalBgn: parseFloat(document.getElementById('formTotalBgn').value) || 0,
+        promoCode: document.getElementById('formPromoCode').value || '',
+        note: formData.get('note') || ''
+      };
+      
+      try {
+        // Save to GitHub repository
+        const ghResponse = await fetch('/.netlify/functions/save-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
+        
+        const ghResult = await ghResponse.json();
+        console.log('Order saved to GitHub:', ghResult);
+        
+        // Also submit to Netlify Forms
+        await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(formData).toString()
+        });
+        
+        btn.textContent = '✅ Изпрати поръчката';
+        btn.disabled = false;
+        closeOrder();
+        openSuccess();
+        
+        // Reset form and cart
+        form.reset();
+        qty = 1;
+        cartHasItem = false;
+        discountApplied = false;
+        discountPercent = 10;
+        currentPromoCode = '';
+        selectedDeliveryMethod = null;
+        
+        // Reset delivery widget
+        document.getElementById('tabOffice').classList.remove('active');
+        document.getElementById('tabAddress').classList.remove('active');
+        document.getElementById('deliveryFields').classList.remove('show');
+        document.getElementById('deliveryStatusText').textContent = 'Изберете доставка';
+        document.getElementById('deliveryStatusText').style.color = 'var(--muted)';
+        
+        document.getElementById('promoInput').disabled = false;
+        document.getElementById('promoInput').value = '';
+        document.getElementById('promoBtn').textContent = 'Приложи';
+        document.getElementById('promoMessage').textContent = '';
+        document.getElementById('addToCartBtn').textContent = '🛒 Добави в кошницата';
+        document.getElementById('addToCartBtn').classList.remove('btn-success');
+        document.getElementById('addToCartBtn').classList.add('btn-accent');
+        document.getElementById('discountRow').style.display = 'none';
+        document.getElementById('orderDiscountRow').style.display = 'none';
+        document.getElementById('originalTotal').style.display = 'none';
+        updatePrices();
+        
+      } catch (error) {
+        console.error('Error saving order:', error);
+        btn.textContent = '✅ Изпрати поръчката';
+        btn.disabled = false;
+        showToast('Грешка при запазване. Опитайте отново.', 'error');
+      }
+    }
+
+    function openSuccess() {
+      document.getElementById('successModal').classList.add('show');
+    }
+
+    function closeSuccess() {
+      document.getElementById('successModal').classList.remove('show');
+    }
+
+    // ===== REVIEW SYSTEM =====
+    function setupStarRating() {
+      document.querySelectorAll('#starRating span').forEach(star => {
+        star.addEventListener('click', () => {
+          currentRating = parseInt(star.dataset.rating);
+          document.getElementById('reviewRating').value = currentRating;
+          updateStarDisplay(currentRating);
+        });
+      });
+    }
+
+    function updateStarDisplay(rating) {
+      document.querySelectorAll('#starRating span').forEach((star, i) => {
+        star.style.color = i < rating ? '#fbbf24' : '#e5e7eb';
+      });
+    }
+
+    function openReviewModal() {
+      document.getElementById('reviewModal').classList.add('show');
+      updateStarDisplay(5);
+    }
+
+    function closeReviewModal() {
+      document.getElementById('reviewModal').classList.remove('show');
+      document.getElementById('reviewForm').reset();
+      currentRating = 5;
+    }
+
+    async function submitReview(e) {
+      e.preventDefault();
+      
+      const reviewData = {
+        name: document.getElementById('reviewName').value,
+        rating: parseInt(document.getElementById('reviewRating').value),
+        text: document.getElementById('reviewText').value,
+        verified: false,
+        createdAt: new Date().toISOString()
+      };
+      
+      try {
+        const response = await fetch('/.netlify/functions/save-review', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(reviewData)
+        });
+        
+        const result = await response.json();
+        console.log('Review saved:', result);
+        
+        // Also save to localStorage as backup
+        saveReviewToLocal(reviewData);
+        
+        loadReviews();
+        closeReviewModal();
+        showToast('Вие успешно добавихте ревю!', 'success');
+        
+      } catch (error) {
+        console.error('Error saving review to server:', error);
+        // Save to localStorage when server fails
+        saveReviewToLocal(reviewData);
+        loadReviews();
+        closeReviewModal();
+        showToast('Вие успешно добавихте ревю!', 'success');
+      }
+    }
+    
+    function saveReviewToLocal(reviewData) {
+      let localReviews = JSON.parse(localStorage.getItem('airStoreReviews') || '[]');
+      const newReview = {
+        id: 'REV-' + Date.now().toString(36).toUpperCase(),
+        ...reviewData
+      };
+      localReviews.unshift(newReview);
+      localStorage.setItem('airStoreReviews', JSON.stringify(localReviews));
+    }
+
+    async function loadReviews() {
+      try {
+        // Get local reviews first
+        const localReviews = JSON.parse(localStorage.getItem('airStoreReviews') || '[]');
+        
+        const response = await fetch('/.netlify/functions/get-reviews?limit=10');
+        const result = await response.json();
+        
+        let allReviews = [];
+        
+        if (result.success && result.reviews) {
+          allReviews = [...result.reviews];
+        }
+        
+        // Add local reviews to the list
+        if (localReviews.length > 0) {
+          allReviews = [...localReviews, ...allReviews];
+        }
+        
+        // Show only first 4
+        const displayReviews = allReviews.slice(0, 4);
+        
+        if (displayReviews.length > 0) {
+          const list = document.getElementById('reviewsList');
+          list.innerHTML = displayReviews.map(r => createReviewHTML({
+            id: r.id,
+            name: r.name,
+            rating: r.rating,
+            text: r.text,
+            date: r.createdAt ? new Date(r.createdAt).toLocaleDateString('bg-BG') : r.date,
+            verified: r.verified
+          })).join('');
+          
+          document.getElementById('totalReviews').textContent = allReviews.length;
+          
+          // Calculate average
+          const avg = (allReviews.reduce((sum, r) => sum + (r.rating || 5), 0) / allReviews.length).toFixed(1);
+          document.getElementById('avgRating').textContent = avg;
+        } else {
+          showFallbackReviews();
+        }
+      } catch (error) {
+        console.error('Error loading reviews:', error);
+        // Try to show local reviews on error
+        const localReviews = JSON.parse(localStorage.getItem('airStoreReviews') || '[]');
+        if (localReviews.length > 0) {
+          const list = document.getElementById('reviewsList');
+          list.innerHTML = localReviews.slice(0, 4).map(r => createReviewHTML({
+            id: r.id,
+            name: r.name,
+            rating: r.rating,
+            text: r.text,
+            date: new Date(r.createdAt).toLocaleDateString('bg-BG'),
+            verified: r.verified
+          })).join('');
+          document.getElementById('totalReviews').textContent = localReviews.length;
+        } else {
+          showFallbackReviews();
+        }
+      }
+    }
+    
+    function showFallbackReviews() {
+      const fallbackReviews = [
+        { id: 1, name: 'Иван П.', rating: 5, text: 'Много чист звук и шумопотискането е топ. Дойдоха бързо!', date: 'преди 2 дни', verified: true },
+        { id: 2, name: 'Мария К.', rating: 5, text: 'Удобни за носене и батерията държи много. Препоръчвам!', date: 'преди 5 дни', verified: true },
+        { id: 3, name: 'Георги Д.', rating: 5, text: 'Добро качество за цената. Доставката беше бърза.', date: 'преди седмица', verified: true }
+      ];
+      
+      const list = document.getElementById('reviewsList');
+      list.innerHTML = fallbackReviews.map(r => createReviewHTML(r)).join('');
+      document.getElementById('totalReviews').textContent = fallbackReviews.length;
+      document.getElementById('avgRating').textContent = '5.0';
+    }
+
+    function createReviewHTML(r) {
+      const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+      return `
+        <div class="review-card">
+          <div class="review-header">
+            <div class="reviewer">
+              <div class="reviewer-avatar">${r.name.charAt(0)}</div>
+              <div>
+                <div class="reviewer-name">${r.name} ${r.verified ? '<span class="verified-badge">✓ Проверена</span>' : ''}</div>
+                <div class="review-date">${r.date}</div>
+              </div>
+            </div>
+          </div>
+          <div class="review-stars">${stars}</div>
+          <div class="review-text">${r.text}</div>
+        </div>
+      `;
+    }
+
+    async function openAllReviews() {
+      try {
+        const response = await fetch('/.netlify/functions/get-reviews?limit=100');
+        const result = await response.json();
+        
+        if (result.success && result.reviews) {
+          document.getElementById('allReviewsList').innerHTML = result.reviews.map(r => createReviewHTML({
+            id: r.id,
+            name: r.name,
+            rating: r.rating,
+            text: r.text,
+            date: new Date(r.createdAt).toLocaleDateString('bg-BG'),
+            verified: r.verified
+          })).join('');
+        } else {
+          showFallbackAllReviews();
+        }
+      } catch (error) {
+        console.error('Error loading all reviews:', error);
+        showFallbackAllReviews();
+      }
+      document.getElementById('allReviewsModal').classList.add('show');
+    }
+    
+    function showFallbackAllReviews() {
+      const fallbackReviews = [
+        { id: 1, name: 'Иван П.', rating: 5, text: 'Много чист звук и шумопотискането е топ. Дойдоха бързо!', date: 'преди 2 дни', verified: true },
+        { id: 2, name: 'Мария К.', rating: 5, text: 'Удобни за носене и батерията държи много. Препоръчвам!', date: 'преди 5 дни', verified: true },
+        { id: 3, name: 'Георги Д.', rating: 4, text: 'Добро качество за цената. Доставката беше бърза.', date: 'преди седмица', verified: true },
+        { id: 4, name: 'Петър С.', rating: 5, text: 'Страхотен продукт! Препоръчвам на всички.', date: 'преди 2 седмици', verified: true },
+        { id: 5, name: 'Анна М.', rating: 5, text: 'Много съм доволна! Благодаря!', date: 'преди 3 седмици', verified: true }
+      ];
+      document.getElementById('allReviewsList').innerHTML = fallbackReviews.map(r => createReviewHTML(r)).join('');
+    }
+
+    function closeAllReviews() {
+      document.getElementById('allReviewsModal').classList.remove('show');
+    }
+
+    // ===== GALLERY =====
+    let currentImage = 'assets/airpods.png';
+    function changeImage(btn, src) {
+      currentImage = src;
+      document.getElementById('mainImg').src = src;
+      document.querySelectorAll('.th').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // ===== LIGHTBOX =====
+    function openLightbox() {
+      document.getElementById('lightboxImage').src = currentImage;
+      document.getElementById('lightboxModal').classList.add('show');
+    }
+    function closeLightbox() {
+      document.getElementById('lightboxModal').classList.remove('show');
+    }
+
+    // ===== COMPARISON SLIDER =====
+    function initComparisonSlider() {
+      const slider = document.getElementById('comparisonSlider');
+      const beforeImage = document.getElementById('beforeImage');
+      const handle = document.getElementById('sliderHandle');
+      if (!slider || !beforeImage || !handle) return;
+
+      let isDragging = false;
+
+      function updateSlider(clientX) {
+        const rect = slider.getBoundingClientRect();
+        let percentage = ((clientX - rect.left) / rect.width) * 100;
+        percentage = Math.max(5, Math.min(95, percentage));
+        beforeImage.style.width = percentage + '%';
+        handle.style.left = percentage + '%';
+      }
+
+      // Mouse events
+      handle.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        slider.classList.add('dragging');
+        e.preventDefault();
+        e.stopPropagation();
+      });
+
+      slider.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        updateSlider(e.clientX);
+      });
+
+      slider.addEventListener('mouseup', () => {
+        isDragging = false;
+        slider.classList.remove('dragging');
+      });
+
+      slider.addEventListener('mouseleave', () => {
+        isDragging = false;
+        slider.classList.remove('dragging');
+      });
+
+      // Touch events
+      handle.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        slider.classList.add('dragging');
+        e.preventDefault();
+      }, {passive: false});
+
+      slider.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        updateSlider(e.touches[0].clientX);
+      }, {passive: false});
+
+      slider.addEventListener('touchend', () => {
+        isDragging = false;
+        slider.classList.remove('dragging');
+      });
+
+      // Click on slider to move handle
+      slider.addEventListener('click', (e) => {
+        if (e.target === handle || e.target.closest('.comparison-handle')) return;
+        updateSlider(e.clientX);
+      });
+    }
+
+    // ===== TOAST =====
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMessage').textContent = msg;
+      toast.className = 'toast show toast-' + type;
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // ===== KEYBOARD =====
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeCart(); closeOrder(); closeSuccess(); closeReviewModal(); closeAllReviews(); closeLightbox();
+      }
+    });
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

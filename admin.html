@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Admin Panel - AirStore Bulgaria</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root{
+      --bg:#f1f5f9;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#e2e8f0;
+      --card:#fff;
+      --accent:#0071e3;
+      --success:#22c55e;
+      --danger:#ef4444;
+      --warning:#f59e0b;
+      --info:#3b82f6;
+      --purple:#8b5cf6;
+      --pink:#ec4899;
+      --sidebar:#0f172a;
+      --r:12px;
+      --safe-bottom:env(safe-area-inset-bottom,0px);
+      --safe-top:env(safe-area-inset-top,0px);
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html{font-size:clamp(14px, 2vw, 16px)}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;
+      background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
+    
+    /* Login Screen */
+    .login-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--sidebar),#1e293b);display:grid;place-items:center;z-index:1000;padding:20px}
+    .login-box{background:var(--card);padding:clamp(24px, 5vw, 40px);border-radius:var(--r);width:100%;max-width:400px;box-shadow:0 25px 50px rgba(0,0,0,.3)}
+    .login-logo{text-align:center;margin-bottom:30px}
+    .login-logo-icon{width:clamp(60px, 15vw, 70px);height:clamp(60px, 15vw, 70px);background:linear-gradient(135deg,var(--accent),#00d4aa);border-radius:20px;display:grid;place-items:center;margin:0 auto 16px;color:#fff;font-size:clamp(28px, 7vw, 32px)}
+    .login-logo h1{margin:0;font-size:clamp(20px, 5vw, 24px)}
+    .login-logo p{margin:8px 0 0;color:var(--muted);font-size:14px}
+    .form-group{margin-bottom:20px}
+    .form-label{display:block;font-weight:600;font-size:13px;color:var(--muted);margin-bottom:6px;text-transform:uppercase}
+    .form-input{width:100%;padding:14px 16px;border-radius:var(--r);border:2px solid var(--line);font-size:16px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+    .form-input:focus{border-color:var(--accent)}
+    .btn{width:100%;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-weight:600;font-size:16px;cursor:pointer;transition:all .2s;touch-action:manipulation;min-height:48px}
+    .btn:hover{background:#005bb5}
+    .btn:active{transform:scale(0.98)}
+    .btn-danger{background:var(--danger)}
+    .btn-danger:hover{background:#dc2626}
+    .btn-success{background:var(--success)}
+    .btn-warning{background:var(--warning);color:#000}
+    .btn-sm{padding:10px 16px;font-size:14px;width:auto;min-height:44px}
+    .btn-icon{width:44px;height:44px;padding:0;display:grid;place-items:center}
+    .error-message{color:var(--danger);font-size:13px;margin-top:8px;text-align:center}
+
+    /* Admin Layout */
+    .admin-layout{display:none;min-height:100vh}
+    .admin-layout.show{display:block}
+    
+    /* Mobile Header */
+    .mobile-header{display:flex;justify-content:space-between;align-items:center;padding:16px;background:var(--sidebar);color:#fff;position:sticky;top:0;z-index:100}
+    .mobile-header-title{font-weight:700;font-size:18px;display:flex;align-items:center;gap:8px}
+    .hamburger-btn{width:44px;height:44px;background:transparent;border:none;color:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:8px}
+    .hamburger-btn:hover{background:rgba(255,255,255,.1)}
+    
+    /* Sidebar */
+    .sidebar{position:fixed;top:0;left:0;bottom:0;width:280px;background:var(--sidebar);color:#fff;padding:24px 0;z-index:200;transform:translateX(-100%);transition:transform .3s ease;overflow-y:auto}
+    .sidebar.open{transform:translateX(0)}
+    .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:150;opacity:0;visibility:hidden;transition:all .3s}
+    .sidebar-overlay.show{opacity:1;visibility:visible}
+    .sidebar-header{padding:0 24px 24px;border-bottom:1px solid rgba(255,255,255,.1)}
+    .sidebar-logo{display:flex;align-items:center;gap:12px}
+    .sidebar-logo-icon{width:44px;height:44px;background:var(--accent);border-radius:12px;display:grid;place-items:center;font-size:20px}
+    .sidebar-logo-text{font-weight:700;font-size:18px}
+    .sidebar-close{position:absolute;top:16px;right:16px;width:40px;height:40px;background:rgba(255,255,255,.1);border:none;color:#fff;border-radius:8px;font-size:20px;cursor:pointer}
+    .sidebar-nav{margin-top:16px}
+    .nav-item{display:flex;align-items:center;gap:12px;padding:14px 24px;cursor:pointer;transition:all .2s;border-left:3px solid transparent}
+    .nav-item:hover{background:rgba(255,255,255,.05)}
+    .nav-item.active{background:rgba(255,255,255,.1);border-left-color:var(--accent)}
+    .nav-item-icon{font-size:20px;min-width:24px;text-align:center}
+    .nav-item-text{font-size:14px;font-weight:500}
+    .nav-badge{background:var(--danger);color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-left:auto}
+    .sidebar-section{margin-top:24px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1)}
+    .sidebar-section-title{padding:0 24px 12px;font-size:11px;text-transform:uppercase;color:rgba(255,255,255,.5);letter-spacing:1px}
+    .sidebar-footer{position:absolute;bottom:0;left:0;right:0;padding:24px;border-top:1px solid rgba(255,255,255,.1);background:var(--sidebar)}
+    .logout-btn{width:100%;padding:14px;background:rgba(255,255,255,.1);color:#fff;border:none;border-radius:var(--r);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px}
+
+    /* Main Content */
+    .main-content{overflow-x:hidden;padding-bottom:calc(80px + var(--safe-bottom))}
+    .header-desktop{display:none}
+    .content{padding:clamp(16px, 4vw, 32px)}
+
+    /* Stats Grid */
+    .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(12px, 3vw, 20px);margin-bottom:32px}
+    .stat-card{background:var(--card);padding:clamp(16px, 4vw, 24px);border-radius:var(--r);border:1px solid var(--line);position:relative;overflow:hidden}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+    .stat-card.blue::before{background:var(--accent)}
+    .stat-card.green::before{background:var(--success)}
+    .stat-card.orange::before{background:var(--warning)}
+    .stat-card.red::before{background:var(--danger)}
+    .stat-card.purple::before{background:var(--purple)}
+    .stat-card.pink::before{background:var(--pink)}
+    .stat-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:12px}
+    .stat-icon{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:24px}
+    .stat-icon.blue{background:#dbeafe;color:var(--accent)}
+    .stat-icon.green{background:#dcfce7;color:var(--success)}
+    .stat-icon.orange{background:#fef3c7;color:var(--warning)}
+    .stat-icon.red{background:#fee2e2;color:var(--danger)}
+    .stat-icon.purple{background:#ede9fe;color:var(--purple)}
+    .stat-icon.pink{background:#fce7f3;color:var(--pink)}
+    .stat-value{font-size:clamp(24px, 6vw, 32px);font-weight:800;margin-bottom:4px}
+    .stat-label{color:var(--muted);font-size:13px}
+    .stat-change{font-size:12px;margin-top:8px;font-weight:600;display:flex;align-items:center;gap:4px}
+    .stat-change.up{color:var(--success)}
+    .stat-change.down{color:var(--danger)}
+
+    /* Charts */
+    .chart-container{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin-bottom:24px}
+    .chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+    .chart-title{font-size:18px;font-weight:700}
+    .chart-filters{display:flex;gap:8px;flex-wrap:wrap}
+    .chart-filter{padding:8px 16px;border:1px solid var(--line);border-radius:var(--r);background:#fff;cursor:pointer;font-size:13px;font-weight:500;transition:all .2s}
+    .chart-filter:hover{border-color:var(--accent)}
+    .chart-filter.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .chart-wrapper{position:relative;height:300px}
+
+    /* Search & Filters */
+    .search-bar{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+    .search-input{flex:1;min-width:200px;padding:12px 16px;border:1px solid var(--line);border-radius:var(--r);font-size:14px;outline:none}
+    .search-input:focus{border-color:var(--accent)}
+    .filter-select{padding:12px 16px;border:1px solid var(--line);border-radius:var(--r);font-size:14px;background:#fff;cursor:pointer;min-width:150px}
+
+    /* Tables */
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:24px}
+    .card-header{padding:clamp(16px, 4vw, 20px) clamp(16px, 4vw, 24px);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .card-title{font-size:clamp(16px, 4vw, 18px);font-weight:700}
+    .card-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .card-body{overflow-x:auto}
+    .table{width:100%;border-collapse:collapse;font-size:14px}
+    .table th,.table td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--line)}
+    .table th{background:#f8fafc;font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;white-space:nowrap}
+    .table tr:hover{background:#f8fafc}
+    .table td{vertical-align:middle}
+
+    /* Mobile Cards */
+    .mobile-cards{display:block}
+    .mobile-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
+    .mobile-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+    .mobile-card-id{font-weight:700;font-size:16px}
+    .mobile-card-date{color:var(--muted);font-size:12px}
+    .mobile-card-row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px}
+    .mobile-card-label{color:var(--muted)}
+    .mobile-card-value{font-weight:600}
+    .mobile-card-actions{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+    .mobile-card-actions .btn{flex:1;font-size:13px;padding:10px}
+
+    /* Status */
+    .status-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600}
+    .status-new{background:#dbeafe;color:#1e40af}
+    .status-processing{background:#fef3c7;color:#92400e}
+    .status-completed{background:#dcfce7;color:#166534}
+    .status-cancelled{background:#fee2e2;color:#991b1b}
+    .status-pending{background:#f3e8ff;color:#6b21a8}
+
+    /* Status Select */
+    .status-select{padding:8px 12px;border-radius:8px;border:1px solid var(--line);font-size:13px;outline:none;cursor:pointer;background:#fff}
+
+    /* Actions */
+    .actions{display:flex;gap:8px}
+    .action-btn{width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:#fff;display:grid;place-items:center;cursor:pointer;transition:all .2s;font-size:16px}
+    .action-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .action-btn.danger:hover{background:var(--danger);border-color:var(--danger)}
+
+    /* Reviews */
+    .reviews-grid{display:grid;grid-template-columns:1fr;gap:16px}
+    .review-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+    .review-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:12px}
+    .reviewer{display:flex;align-items:center;gap:12px}
+    .reviewer-avatar{width:48px;height:48px;background:var(--accent);color:#fff;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:18px}
+    .reviewer-info{flex:1}
+    .reviewer-name{font-weight:600;font-size:15px}
+    .reviewer-date{color:var(--muted);font-size:12px}
+    .review-stars{color:#fbbf24;font-size:18px;margin-bottom:12px}
+    .review-text{color:var(--muted);font-size:14px;line-height:1.6}
+    .review-actions{display:flex;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+
+    /* Add Review Form */
+    .add-review-form{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin-bottom:24px}
+    .form-row{display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width:640px){.form-row{grid-template-columns:1fr 1fr}}
+    .star-input{display:flex;gap:12px;font-size:32px;cursor:pointer;padding:8px 0}
+    .star-input span{color:#e5e7eb;transition:all .2s}
+    .star-input span:hover,.star-input span.active{color:#fbbf24;transform:scale(1.1)}
+
+    /* Tabs */
+    .tabs{display:flex;gap:4px;margin-bottom:24px;border-bottom:2px solid var(--line);overflow-x:auto}
+    .tab{flex-shrink:0;padding:12px 20px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;font-size:14px;white-space:nowrap}
+    .tab:hover{color:var(--text)}
+    .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+    /* Section */
+    .section{display:none}
+    .section.active{display:block;animation:fadeIn .3s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Modal */
+    .modal{position:fixed;inset:0;display:none;place-items:center;padding:20px;background:rgba(0,0,0,.5);z-index:500;backdrop-filter:blur(4px)}
+    .modal.show{display:grid}
+    .modal-content{background:var(--card);border-radius:var(--r);width:100%;max-width:600px;max-height:90vh;overflow:auto;animation:fadeIn .3s}
+    .modal-header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--card);z-index:1}
+    .modal-title{font-size:18px;font-weight:700}
+    .modal-body{padding:24px}
+    .modal-footer{padding:20px 24px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:12px}
+
+    /* Promo Codes */
+    .promo-list{display:grid;gap:12px}
+    .promo-item{display:flex;justify-content:space-between;align-items:center;padding:16px;background:var(--card);border:1px solid var(--line);border-radius:var(--r)}
+    .promo-code{font-family:monospace;font-size:18px;font-weight:700;background:linear-gradient(135deg,var(--accent),#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .promo-discount{font-size:14px;color:var(--success);font-weight:600}
+    .promo-uses{color:var(--muted);font-size:13px}
+
+    /* Stock Management */
+    .stock-item{display:flex;justify-content:space-between;align-items:center;padding:16px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);margin-bottom:12px}
+    .stock-info{flex:1}
+    .stock-name{font-weight:600;font-size:15px}
+    .stock-sku{color:var(--muted);font-size:12px}
+    .stock-controls{display:flex;align-items:center;gap:12px}
+    .stock-input{width:80px;padding:10px;border:1px solid var(--line);border-radius:8px;text-align:center;font-size:16px;font-weight:600}
+    .stock-status{font-size:13px;font-weight:600}
+    .stock-status.instock{color:var(--success)}
+    .stock-status.low{color:var(--warning)}
+    .stock-status.out{color:var(--danger)}
+
+    /* Notifications */
+    .notification-panel{position:fixed;top:0;right:0;bottom:0;width:360px;background:var(--card);border-left:1px solid var(--line);z-index:300;transform:translateX(100%);transition:transform .3s;overflow-y:auto}
+    .notification-panel.open{transform:translateX(0)}
+    .notification-header{padding:20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+    .notification-title{font-size:18px;font-weight:700}
+    .notification-list{padding:16px}
+    .notification-item{padding:16px;border:1px solid var(--line);border-radius:var(--r);margin-bottom:12px;cursor:pointer;transition:all .2s}
+    .notification-item:hover{border-color:var(--accent);background:#f8fafc}
+    .notification-item.unread{border-left:4px solid var(--accent)}
+    .notification-time{color:var(--muted);font-size:12px}
+    .notification-text{font-size:14px;margin-top:4px}
+
+    /* Toast */
+    .toast{position:fixed;bottom:calc(20px + var(--safe-bottom));left:50%;transform:translateX(-50%) translateY(100px);padding:14px 24px;background:#333;color:#fff;border-radius:var(--r);z-index:1000;font-weight:600;font-size:14px;opacity:0;transition:all .3s;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .toast.success{background:var(--success)}
+    .toast.error{background:var(--danger)}
+    .toast.warning{background:var(--warning);color:#000}
+
+    /* Bottom Navigation */
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:calc(8px + var(--safe-bottom)) 0 8px;z-index:90}
+    .bottom-nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;cursor:pointer;color:var(--muted);transition:all .2s;border:none;background:transparent;font-size:11px;font-family:inherit}
+    .bottom-nav-item.active{color:var(--accent)}
+    .bottom-nav-item span:first-child{font-size:20px}
+
+    /* Quick Actions */
+    .quick-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}
+    .quick-action{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s}
+    .quick-action:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1)}
+    .quick-action-icon{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:24px}
+    .quick-action-text{font-weight:600;font-size:14px}
+
+    /* Sync Status */
+    .sync-status{display:flex;align-items:center;gap:8px;padding:8px 16px;background:#dcfce7;border-radius:var(--r);font-size:13px;color:#166534;margin-bottom:16px}
+    .sync-status.syncing{background:#fef3c7;color:#92400e}
+    .sync-status.error{background:#fee2e2;color:#991b1b}
+    .sync-indicator{width:8px;height:8px;border-radius:50%;background:var(--success);animation:pulse 2s infinite}
+    .sync-status.syncing .sync-indicator{background:var(--warning);animation:spin 1s linear infinite}
+    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+    /* Desktop */
+    @media(min-width:768px){
+      .mobile-header{display:none}
+      .sidebar{position:fixed;transform:none;width:260px;z-index:50}
+      .sidebar-close{display:none}
+      .sidebar-overlay{display:none!important}
+      .main-content{margin-left:260px}
+      .header-desktop{display:flex;background:var(--card);padding:20px 32px;border-bottom:1px solid var(--line);justify-content:space-between;align-items:center;position:sticky;top:0;z-index:40}
+      .header-title{font-size:24px;font-weight:700}
+      .header-actions{display:flex;gap:12px;align-items:center}
+      .header-btn{width:44px;height:44px;border-radius:var(--r);border:1px solid var(--line);background:#fff;display:grid;place-items:center;cursor:pointer;font-size:20px;position:relative}
+      .header-btn:hover{border-color:var(--accent)}
+      .header-btn .badge{position:absolute;top:-4px;right:-4px;width:20px;height:20px;background:var(--danger);color:#fff;font-size:11px;border-radius:50%;display:grid;place-items:center}
+      .stats-grid{grid-template-columns:repeat(3,1fr)}
+      .bottom-nav{display:none}
+      .main-content{padding-bottom:32px}
+      .quick-actions{grid-template-columns:repeat(4,1fr)}
+      .reviews-grid{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media(min-width:1024px){
+      .stats-grid{grid-template-columns:repeat(6,1fr)}
+      .reviews-grid{grid-template-columns:repeat(3,1fr)}
+    }
+
+    @media(max-width:767px){
+      .desktop-only{display:none!important}
+      .mobile-only{display:block!important}
+    }
+    @media(min-width:768px){
+      .desktop-only{display:block!important}
+      .mobile-only{display:none!important}
+    }
+
+    /* Dark Mode */
+    @media(prefers-color-scheme:dark){
+      :root{--bg:#0f172a;--text:#f1f5f9;--card:#1e293b;--line:#334155;--muted:#94a3b8}
+      .form-input,.status-select,.search-input,.filter-select{background:#1e293b;color:#f1f5f9;border-color:#334155}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login Screen -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <div class="login-logo">
+        <div class="login-logo-icon">🎧</div>
+        <h1>AirStore Admin</h1>
+        <p>Влезте в админ панела</p>
+      </div>
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label">Потребителско име</label>
+          <input type="text" class="form-input" id="username" placeholder="Въведи username" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Парола</label>
+          <input type="password" class="form-input" id="password" placeholder="Въведи парола" required />
+        </div>
+        <button type="submit" class="btn">Вход</button>
+        <div class="error-message" id="loginError"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Layout -->
+  <div class="admin-layout" id="adminLayout">
+    
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+      <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+      <div class="mobile-header-title">🎧 AirStore Admin</div>
+      <div style="width:44px"></div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <div class="sidebar-logo-icon">🎧</div>
+          <div class="sidebar-logo-text">AirStore</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-item active" onclick="showSection('dashboard')">
+          <span class="nav-item-icon">📊</span>
+          <span class="nav-item-text">Табло</span>
+        </div>
+        <div class="nav-item" onclick="showSection('orders')">
+          <span class="nav-item-icon">📦</span>
+          <span class="nav-item-text">Поръчки</span>
+          <span class="nav-badge" id="newOrdersBadge">0</span>
+        </div>
+        <div class="nav-item" onclick="showSection('reviews')">
+          <span class="nav-item-icon">⭐</span>
+          <span class="nav-item-text">Отзиви</span>
+          <span class="nav-badge" id="newReviewsBadge">0</span>
+        </div>
+        <div class="nav-item" onclick="showSection('promos')">
+          <span class="nav-item-icon">🎁</span>
+          <span class="nav-item-text">Промо Кодове</span>
+        </div>
+        <div class="nav-item" onclick="showSection('stock')">
+          <span class="nav-item-icon">📦</span>
+          <span class="nav-item-text">Наличности</span>
+        </div>
+        <div class="nav-item" onclick="showSection('analytics')">
+          <span class="nav-item-icon">📈</span>
+          <span class="nav-item-text">Аналитика</span>
+        </div>
+        <div class="nav-item" onclick="showSection('customers')">
+          <span class="nav-item-icon">👥</span>
+          <span class="nav-item-text">Клиенти</span>
+        </div>
+        <div class="nav-item" onclick="showSection('finance')">
+          <span class="nav-item-icon">💰</span>
+          <span class="nav-item-text">Финанси</span>
+        </div>
+      </nav>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Система</div>
+        <div class="nav-item" onclick="showSection('settings')">
+          <span class="nav-item-icon">⚙️</span>
+          <span class="nav-item-text">Настройки</span>
+        </div>
+        <div class="nav-item" onclick="syncWithGitHub()">
+          <span class="nav-item-icon">🔄</span>
+          <span class="nav-item-text">Синхронизирай</span>
+        </div>
+        <div class="nav-item" onclick="exportAllData()">
+          <span class="nav-item-icon">💾</span>
+          <span class="nav-item-text">Експорт Всичко</span>
+        </div>
+      </div>
+      <div class="sidebar-footer">
+        <button class="logout-btn" onclick="logout()">🚪 Изход</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Desktop Header -->
+      <div class="header-desktop">
+        <div class="header-title" id="desktopHeaderTitle">📊 Табло</div>
+        <div class="header-actions">
+          <div class="sync-status" id="syncStatus">
+            <span class="sync-indicator"></span>
+            <span>Синхронизирано с GitHub</span>
+          </div>
+          <button class="header-btn" onclick="toggleNotifications()" title="Уведомления">
+            🔔
+            <span class="badge" id="notificationCount">0</span>
+          </button>
+          <button class="header-btn" onclick="syncWithGitHub()" title="Синхронизирай">🔄</button>
+          <button class="header-btn" onclick="refreshData()" title="Обнови">🔄</button>
+          <div style="display:flex;align-items:center;gap:12px;margin-left:16px;padding-left:16px;border-left:1px solid var(--line)">
+            <span>Администратор</span>
+            <div style="width:40px;height:40px;background:var(--accent);border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700">A</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Section -->
+      <div class="section active" id="dashboardSection">
+        <div class="content">
+          <!-- Sync Status -->
+          <div class="sync-status" id="mobileSyncStatus">
+            <span class="sync-indicator"></span>
+            <span>Синхронизирано с GitHub</span>
+          </div>
+
+          <!-- Stats -->
+          <div class="stats-grid">
+            <div class="stat-card blue">
+              <div class="stat-header">
+                <div>
+                  <div class="stat-value" id="statVisitors">0</div>
+                  <div class="stat-label">Посетители днес</div>
+                </div>
+                <div class="stat-icon blue">👥</div>
+              </div>
+              <div class="stat-change up">↑ <span id="visitorsChange">0%</span></div>
+            </div>
+            <div class="stat-card green">
+              <div class="stat-header">
+                <div>
+                  <div class="stat-value" id="statOrders">0</div>
+                  <div class="stat-label">Поръчки днес</div>
+                </div>
+                <div class="stat-icon green">📦</div>
+              </div>
+              <div class="stat-change up">↑ <span id="ordersChange">0%</span></div>
+            </div>
+            <div class="stat-card orange">
+              <div class="stat-header">
+                <div>
+                  <div class="stat-value" id="statRevenue">€0</div>
+                  <div class="stat-label">Приходи днес</div>
+                </div>
+                <div class="stat-icon orange">💰</div>
+              </div>
+              <div class="stat-change up">↑ <span id="revenueChange">0%</span></div>
+            </div>
+            <div class="stat-card red">
+              <div class="stat-header">
+                <div>
+                  <div class="stat-value" id="statPending">0</div>
+                  <div class="stat-label">Чакащи поръчки</div>
+                </div>
+                <div class="stat-icon red">⏳</div>
+              </div>
+              <div class="stat-change">Нуждаят се от внимание</div>
+            </div>
+            <div class="stat-card purple">
+              <div class="stat-header">
+                <div>
+                  <div class="stat-value" id="statReviews">0</div>
+                  <div class="stat-label">Общо отзиви</div>
+                </div>
+                <div class="stat-icon purple">⭐</div>
+              </div>
+              <div class="stat-change up">Средна оценка: <span id="avgRating">0</span>★</div>
+            </div>
+            <div class="stat-card pink">
+              <div class="stat-header">
+                <div>
+                  <div class="stat-value" id="statStock">0</div>
+                  <div class="stat-label">Наличност</div>
+                </div>
+                <div class="stat-icon pink">📦</div>
+              </div>
+              <div class="stat-change" id="stockStatus">В наличност</div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="quick-actions">
+            <div class="quick-action" onclick="showSection('orders')">
+              <div class="quick-action-icon" style="background:#dbeafe">📦</div>
+              <div class="quick-action-text">Виж поръчки</div>
+            </div>
+            <div class="quick-action" onclick="showSection('reviews')">
+              <div class="quick-action-icon" style="background:#fef3c7">⭐</div>
+              <div class="quick-action-text">Управлявай отзиви</div>
+            </div>
+            <div class="quick-action" onclick="showSection('promos')">
+              <div class="quick-action-icon" style="background:#dcfce7">🎁</div>
+              <div class="quick-action-text">Промо кодове</div>
+            </div>
+            <div class="quick-action" onclick="showSection('stock')">
+              <div class="quick-action-icon" style="background:#fce7f3">📦</div>
+              <div class="quick-action-text">Провери наличности</div>
+            </div>
+            <div class="quick-action" onclick="showSection('customers')">
+              <div class="quick-action-icon" style="background:#ede9fe">👥</div>
+              <div class="quick-action-text">Клиенти</div>
+            </div>
+            <div class="quick-action" onclick="showSection('finance')">
+              <div class="quick-action-icon" style="background:#dbeafe">💰</div>
+              <div class="quick-action-text">Финанси</div>
+            </div>
+          </div>
+
+          <!-- Charts -->
+          <div class="chart-container">
+            <div class="chart-header">
+              <div class="chart-title">📈 Продажби през последните 7 дни</div>
+              <div class="chart-filters">
+                <button class="chart-filter active" onclick="updateChart('7days')">7 дни</button>
+                <button class="chart-filter" onclick="updateChart('30days')">30 дни</button>
+                <button class="chart-filter" onclick="updateChart('year')">Година</button>
+              </div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="salesChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Recent Orders -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📋 Последни поръчки</div>
+              <button class="btn btn-sm" onclick="showSection('orders')">Виж всички</button>
+            </div>
+            <div class="card-body">
+              <table class="table desktop-only">
+                <thead>
+                  <tr>
+                    <th>№</th>
+                    <th>Клиент</th>
+                    <th>Град</th>
+                    <th>Сума</th>
+                    <th>Статус</th>
+                  </tr>
+                </thead>
+                <tbody id="recentOrdersTable"></tbody>
+              </table>
+              <div class="mobile-only" id="recentOrdersMobile"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders Section -->
+      <div class="section" id="ordersSection">
+        <div class="content">
+          <!-- Search & Filters -->
+          <div class="search-bar">
+            <input type="text" class="search-input" id="orderSearch" placeholder="🔍 Търси по име, телефон или № поръчка..." oninput="searchOrders()" />
+            <select class="filter-select" id="orderStatusFilter" onchange="filterOrders()">
+              <option value="all">Всички статуси</option>
+              <option value="new">Нови</option>
+              <option value="processing">В обработка</option>
+              <option value="completed">Завършени</option>
+              <option value="cancelled">Отказани</option>
+            </select>
+            <select class="filter-select" id="orderDateFilter" onchange="filterOrders()">
+              <option value="all">Всички дати</option>
+              <option value="today">Днес</option>
+              <option value="week">Тази седмица</option>
+              <option value="month">Този месец</option>
+            </select>
+            <button class="btn btn-sm" onclick="exportOrders()">📥 Експорт</button>
+          </div>
+
+          <!-- Tabs -->
+          <div class="tabs">
+            <div class="tab active" onclick="setOrderTab('all')">Всички</div>
+            <div class="tab" onclick="setOrderTab('new')">Нови <span id="tabNewCount"></span></div>
+            <div class="tab" onclick="setOrderTab('processing')">В обработка</div>
+            <div class="tab" onclick="setOrderTab('completed')">Завършени</div>
+          </div>
+
+          <!-- Orders Table -->
+          <div class="card desktop-only">
+            <div class="card-header">
+              <div class="card-title">📦 Поръчки <span id="ordersCount" style="color:var(--muted);font-weight:400"></span></div>
+              <div class="card-actions">
+                <button class="btn btn-sm" onclick="selectAllOrders()">Избери всички</button>
+                <button class="btn btn-sm btn-success" onclick="bulkComplete()">✓ Завърши избраните</button>
+                <button class="btn btn-sm btn-danger" onclick="bulkDelete()">🗑 Изтрий избраните</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
+                    <th>№</th>
+                    <th>Дата</th>
+                    <th>Клиент</th>
+                    <th>Телефон</th>
+                    <th>Град</th>
+                    <th>Кол.</th>
+                    <th>Сума</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                  </tr>
+                </thead>
+                <tbody id="allOrdersTable"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="mobile-only" id="ordersMobileCards"></div>
+        </div>
+      </div>
+
+      <!-- Reviews Section -->
+      <div class="section" id="reviewsSection">
+        <div class="content">
+          <!-- Add Review Form -->
+          <div class="add-review-form">
+            <h3 style="margin:0 0 20px">➕ Добави нов отзив</h3>
+            <form id="addReviewForm" onsubmit="addReviewFromAdmin(event)">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Име на клиента</label>
+                  <input type="text" class="form-input" id="adminReviewName" placeholder="Въведи име" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Оценка</label>
+                  <div class="star-input" id="adminStarInput">
+                    <span data-rating="1">★</span>
+                    <span data-rating="2">★</span>
+                    <span data-rating="3">★</span>
+                    <span data-rating="4">★</span>
+                    <span data-rating="5">★</span>
+                  </div>
+                  <input type="hidden" id="adminReviewRating" value="5" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Отзив</label>
+                <textarea class="form-input" id="adminReviewText" rows="3" placeholder="Въведи отзив..." required></textarea>
+              </div>
+              <div class="form-group">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                  <input type="checkbox" id="adminReviewVerified" style="width:20px;height:20px" />
+                  <span>Проверена покупка</span>
+                </label>
+              </div>
+              <button type="submit" class="btn btn-success" style="width:auto">➕ Добави отзив</button>
+            </form>
+          </div>
+
+          <!-- Reviews List -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">⭐ Всички отзиви <span id="reviewsCount" style="color:var(--muted);font-weight:400"></span></div>
+              <div class="card-actions">
+                <select class="filter-select" id="reviewFilter" onchange="filterReviews()">
+                  <option value="all">Всички</option>
+                  <option value="verified">Проверени</option>
+                  <option value="unverified">Непроверени</option>
+                </select>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="reviews-grid" id="adminReviewsGrid"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Promo Codes Section -->
+      <div class="section" id="promosSection">
+        <div class="content">
+          <!-- Add Promo Form -->
+          <div class="add-review-form">
+            <h3 style="margin:0 0 20px">🎁 Добави нов промо код</h3>
+            <form id="addPromoForm" onsubmit="addPromoCode(event)">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Код</label>
+                  <input type="text" class="form-input" id="promoCode" placeholder="EASTER15" required style="text-transform:uppercase" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Отстъпка (%)</label>
+                  <input type="number" class="form-input" id="promoDiscount" placeholder="15" min="1" max="100" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Макс. използвания (0 = неограничено)</label>
+                  <input type="number" class="form-input" id="promoMaxUses" placeholder="0" min="0" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Валиден до (празно = безкрайно)</label>
+                  <input type="date" class="form-input" id="promoExpiry" />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success" style="width:auto">➕ Добави промо код</button>
+            </form>
+          </div>
+
+          <!-- Promo Codes List -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🎁 Активни промо кодове</div>
+            </div>
+            <div class="card-body">
+              <div class="promo-list" id="promoList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stock Section -->
+      <div class="section" id="stockSection">
+        <div class="content">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📦 Управление на наличности</div>
+              <button class="btn btn-sm" onclick="saveStockChanges()">💾 Запази промените</button>
+            </div>
+            <div class="card-body">
+              <div id="stockList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Section -->
+      <div class="section" id="analyticsSection">
+        <div class="content">
+          <div class="chart-container">
+            <div class="chart-header">
+              <div class="chart-title">📊 Конверсия</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="conversionChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-container">
+            <div class="chart-header">
+              <div class="chart-title">🌍 Посещения по часове</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="visitsChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-container">
+            <div class="chart-header">
+              <div class="chart-title">⭐ Разпределение на оценките</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="ratingsChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customers Section -->
+      <div class="section" id="customersSection">
+        <div class="content">
+          <div class="search-bar">
+            <input type="text" class="search-input" id="customerSearch" placeholder="🔍 Търси клиент..." oninput="searchCustomers()" />
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">👥 Клиенти <span id="customersCount" style="color:var(--muted);font-weight:400"></span></div>
+              <button class="btn btn-sm" onclick="exportCustomers()">📥 Експорт</button>
+            </div>
+            <div class="card-body">
+              <table class="table desktop-only">
+                <thead>
+                  <tr>
+                    <th>Име</th>
+                    <th>Телефон</th>
+                    <th>Град</th>
+                    <th>Поръчки</th>
+                    <th>Общо</th>
+                    <th>Действия</th>
+                  </tr>
+                </thead>
+                <tbody id="customersTable"></tbody>
+              </table>
+              <div class="mobile-only" id="customersMobile"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Finance Section -->
+      <div class="section" id="financeSection">
+        <div class="content">
+          <div class="stats-grid" style="grid-template-columns:repeat(2,1fr)">
+            <div class="stat-card green">
+              <div class="stat-header">
+                <div>
+                  <div class="stat-value" id="financeTotalRevenue">€0</div>
+                  <div class="stat-label">Общи приходи</div>
+                </div>
+                <div class="stat-icon green">💰</div>
+              </div>
+            </div>
+            <div class="stat-card blue">
+              <div class="stat-header">
+                <div>
+                  <div class="stat-value" id="financeAvgOrder">€0</div>
+                  <div class="stat-label">Средна поръчка</div>
+                </div>
+                <div class="stat-icon blue">📊</div>
+              </div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <div class="chart-header">
+              <div class="chart-title">💰 Приходи по месеци</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="revenueChart"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📋 Финансови транзакции</div>
+            </div>
+            <div class="card-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Дата</th>
+                    <th>Клиент</th>
+                    <th>Описание</th>
+                    <th>Сума</th>
+                  </tr>
+                </thead>
+                <tbody id="financeTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Section -->
+      <div class="section" id="settingsSection">
+        <div class="content">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">⚙️ Общи настройки</div>
+            </div>
+            <div class="card-body" style="padding:24px">
+              <div class="form-group" style="margin-bottom:20px">
+                <label class="form-label">Цена на продукта (EUR)</label>
+                <input type="number" class="form-input" id="settingPrice" value="55" />
+              </div>
+              <div class="form-group" style="margin-bottom:20px">
+                <label class="form-label">Стара цена (EUR)</label>
+                <input type="number" class="form-input" id="settingOldPrice" value="89" />
+              </div>
+              <div class="form-group" style="margin-bottom:20px">
+                <label class="form-label">Телефон за контакт</label>
+                <input type="text" class="form-input" id="settingPhone" value="0878 460 279" />
+              </div>
+              <div class="form-group" style="margin-bottom:20px">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" id="settingEmail" value="info@airstore.bg" />
+              </div>
+              <div class="form-group" style="margin-bottom:20px">
+                <label class="form-label">Име на сайта</label>
+                <input type="text" class="form-input" id="settingSiteName" value="AirStore Bulgaria" />
+              </div>
+              <button class="btn btn-success" onclick="saveSettings()">💾 Запази настройките</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🔄 Синхронизация с GitHub</div>
+            </div>
+            <div class="card-body" style="padding:24px">
+              <p style="color:var(--muted);margin-bottom:16px">Синхронизирай всички данни с GitHub репозиторито.</p>
+              <button class="btn" onclick="syncWithGitHub()">🔄 Синхронизирай сега</button>
+              <div style="margin-top:16px;padding:16px;background:#f8fafc;border-radius:var(--r)">
+                <div style="font-weight:600;margin-bottom:8px">Последна синхронизация:</div>
+                <div id="lastSyncTime">Никога</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <button class="bottom-nav-item active" onclick="showSection('dashboard')">
+        <span>📊</span>
+        <span>Табло</span>
+      </button>
+      <button class="bottom-nav-item" onclick="showSection('orders')">
+        <span>📦</span>
+        <span>Поръчки</span>
+      </button>
+      <button class="bottom-nav-item" onclick="showSection('reviews')">
+        <span>⭐</span>
+        <span>Отзиви</span>
+      </button>
+      <button class="bottom-nav-item" onclick="showSection('promos')">
+        <span>🎁</span>
+        <span>Промо</span>
+      </button>
+      <button class="bottom-nav-item" onclick="showSection('stock')">
+        <span>📦</span>
+        <span>Наличн.</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Order Detail Modal -->
+  <div class="modal" id="orderModal" onclick="if(event.target===this)closeOrderModal()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">📋 Детайли за поръчка</div>
+        <button class="close-btn" onclick="closeOrderModal()">✕</button>
+      </div>
+      <div class="modal-body" id="orderDetailBody"></div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeOrderModal()">Затвори</button>
+        <button class="btn btn-success" onclick="markOrderCompleted()">✓ Маркирай като завършена</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Panel -->
+  <div class="notification-panel" id="notificationPanel">
+    <div class="notification-header">
+      <div class="notification-title">🔔 Уведомления</div>
+      <button class="close-btn" onclick="toggleNotifications()">✕</button>
+    </div>
+    <div class="notification-list" id="notificationList"></div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastContainer"></div>
+
+  <script>
+    // ===== AUTH =====
+    const ADMIN_USER = 'vankoadmin';
+    const ADMIN_PASS = 'vanko094312';
+    let currentOrderTab = 'all';
+    let adminRating = 5;
+    let selectedOrders = new Set();
+    let allOrders = [];
+    let allReviews = [];
+    let allCustomers = [];
+    let salesChart, conversionChart, visitsChart, ratingsChart, revenueChart;
+    let currentOrderId = null;
+
+    // Data Store (syncs with GitHub and localStorage)
+    const DataStore = {
+      orders: [],
+      reviews: [],
+      promos: [],
+      stock: { airpods: 50 },
+      settings: {},
+      visitors: { total: 0, today: 0 },
+      
+      // Load from localStorage
+      load() {
+        this.orders = JSON.parse(localStorage.getItem('admin_orders') || '[]');
+        this.reviews = JSON.parse(localStorage.getItem('admin_reviews') || '[]');
+        this.promos = JSON.parse(localStorage.getItem('admin_promos') || '[]');
+        this.stock = JSON.parse(localStorage.getItem('admin_stock') || '{"airpods":50}');
+        this.settings = JSON.parse(localStorage.getItem('admin_settings') || '{}');
+        this.visitors = JSON.parse(localStorage.getItem('admin_visitors') || '{"total":0,"today":0}');
+      },
+      
+      // Save to localStorage
+      save() {
+        localStorage.setItem('admin_orders', JSON.stringify(this.orders));
+        localStorage.setItem('admin_reviews', JSON.stringify(this.reviews));
+        localStorage.setItem('admin_promos', JSON.stringify(this.promos));
+        localStorage.setItem('admin_stock', JSON.stringify(this.stock));
+        localStorage.setItem('admin_settings', JSON.stringify(this.settings));
+        localStorage.setItem('admin_visitors', JSON.stringify(this.visitors));
+        localStorage.setItem('admin_lastSync', new Date().toISOString());
+      },
+      
+      // Sync with GitHub
+      async sync() {
+        showSyncStatus('syncing');
+        try {
+          // Fetch all data from GitHub
+          const [ordersRes, reviewsRes, promosRes, statsRes] = await Promise.all([
+            fetch('/.netlify/functions/get-orders').catch(() => ({json:()=>({success:false})})),
+            fetch('/.netlify/functions/get-reviews?limit=100').catch(() => ({json:()=>({success:false})})),
+            fetch('/.netlify/functions/get-promos').catch(() => ({json:()=>({success:false})})),
+            fetch('/.netlify/functions/get-stats').catch(() => ({json:()=>({success:false})}))
+          ]);
+          
+          const [ordersData, reviewsData, promosData, statsData] = await Promise.all([
+            ordersRes.json(),
+            reviewsRes.json(),
+            promosRes.json(),
+            statsRes.json()
+          ]);
+          
+          if (ordersData.success) this.orders = ordersData.orders || [];
+          if (reviewsData.success) this.reviews = reviewsData.reviews || [];
+          if (promosData.success) this.promos = promosData.promos || [];
+          
+          this.save();
+          showSyncStatus('synced');
+          showToast('Синхронизирано с GitHub!', 'success');
+          return true;
+        } catch (error) {
+          console.error('Sync error:', error);
+          showSyncStatus('error');
+          showToast('Грешка при синхронизация', 'error');
+          return false;
+        }
+      }
+    };
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      
+      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('adminLayout').classList.add('show');
+        localStorage.setItem('admin_logged_in', 'true');
+        DataStore.load();
+        initDashboard();
+      } else {
+        document.getElementById('loginError').textContent = 'Грешно потребителско име или парола!';
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('admin_logged_in');
+      location.reload();
+    }
+
+    if (localStorage.getItem('admin_logged_in') === 'true') {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminLayout').classList.add('show');
+      DataStore.load();
+      initDashboard();
+    }
+
+    function showSyncStatus(status) {
+      const statuses = document.querySelectorAll('.sync-status');
+      statuses.forEach(el => {
+        el.className = 'sync-status ' + status;
+        const text = el.querySelector('span:last-child');
+        if (text) {
+          if (status === 'syncing') text.textContent = 'Синхронизиране...';
+          else if (status === 'synced') text.textContent = 'Синхронизирано с GitHub';
+          else if (status === 'error') text.textContent = 'Грешка при синхронизация';
+        }
+      });
+    }
+
+    // ===== SIDEBAR =====
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show');
+      document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+    }
+
+    // ===== NOTIFICATIONS =====
+    function toggleNotifications() {
+      const panel = document.getElementById('notificationPanel');
+      panel.classList.toggle('open');
+    }
+
+    // ===== NAVIGATION =====
+    function showSection(section) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.querySelectorAll('.bottom-nav-item').forEach(n => n.classList.remove('active'));
+      
+      document.getElementById(section + 'Section').classList.add('active');
+      
+      const sections = ['dashboard', 'orders', 'reviews', 'promos', 'stock', 'analytics', 'customers', 'finance', 'settings'];
+      const index = sections.indexOf(section);
+      
+      document.querySelectorAll('.sidebar .nav-item').forEach((item, i) => {
+        if (i === index) item.classList.add('active');
+      });
+      
+      if (index < 5) {
+        document.querySelectorAll('.bottom-nav-item').forEach((item, i) => {
+          if (i === index) item.classList.add('active');
+        });
+      }
+      
+      const titles = {
+        dashboard: '📊 Табло',
+        orders: '📦 Поръчки',
+        reviews: '⭐ Отзиви',
+        promos: '🎁 Промо Кодове',
+        stock: '📦 Наличности',
+        analytics: '📈 Аналитика',
+        customers: '👥 Клиенти',
+        finance: '💰 Финанси',
+        settings: '⚙️ Настройки'
+      };
+      document.getElementById('desktopHeaderTitle').textContent = titles[section];
+      
+      window.scrollTo({top:0, behavior:'smooth'});
+      
+      if (section === 'orders') loadOrders();
+      if (section === 'reviews') loadAdminReviews();
+      if (section === 'promos') loadPromoCodes();
+      if (section === 'stock') loadStock();
+      if (section === 'analytics') initAnalyticsCharts();
+      if (section === 'customers') loadCustomers();
+      if (section === 'finance') loadFinance();
+      if (section === 'settings') loadSettings();
+      
+      if (window.innerWidth < 768) toggleSidebar();
+    }
+
+    // ===== DASHBOARD =====
+    async function initDashboard() {
+      updateStats();
+      loadRecentOrders();
+      initSalesChart();
+      setupStarRating();
+      startRealtimeUpdates();
+      updateLastSyncTime();
+      
+      // Initialize GitHub data files if they don't exist
+      await initGitHubData();
+      
+      // Auto sync on load
+      await DataStore.sync();
+      updateStats();
+    }
+    
+    // Initialize data files in GitHub
+    async function initGitHubData() {
+      try {
+        showSyncStatus('syncing');
+        const response = await fetch('/.netlify/functions/init-data', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const result = await response.json();
+        console.log('Init data result:', result);
+        if (result.success) {
+          const created = result.results.filter(r => r.status === 'created').length;
+          if (created > 0) {
+            showToast(`Създадени ${created} файла в GitHub!`, 'success');
+          }
+        }
+      } catch (error) {
+        console.error('Init data error:', error);
+      }
+    }
+
+    function setupStarRating() {
+      const stars = document.querySelectorAll('#adminStarInput span');
+      stars.forEach((star, index) => {
+        star.addEventListener('click', () => {
+          adminRating = index + 1;
+          document.getElementById('adminReviewRating').value = adminRating;
+          updateStarDisplay(adminRating);
+        });
+      });
+    }
+
+    function updateStarDisplay(rating) {
+      document.querySelectorAll('#adminStarInput span').forEach((star, i) => {
+        star.classList.toggle('active', i < rating);
+      });
+    }
+
+    async function updateStats() {
+      try {
+        const response = await fetch('/.netlify/functions/get-stats');
+        const result = await response.json();
+        
+        if (result.success) {
+          const stats = result.stats;
+          document.getElementById('statVisitors').textContent = stats.visitorsToday || 0;
+          document.getElementById('statOrders').textContent = stats.ordersToday || 0;
+          document.getElementById('statRevenue').textContent = '€' + (stats.revenueToday || 0);
+          document.getElementById('statPending').textContent = stats.pendingOrders || 0;
+          document.getElementById('statReviews').textContent = stats.totalReviews || 0;
+          document.getElementById('avgRating').textContent = stats.avgRating || '0';
+          document.getElementById('statStock').textContent = stats.stock || 0;
+          
+          document.getElementById('newOrdersBadge').textContent = stats.newOrders || 0;
+          document.getElementById('newReviewsBadge').textContent = stats.newReviews || 0;
+          document.getElementById('notificationCount').textContent = (stats.newOrders || 0) + (stats.newReviews || 0);
+          
+          document.getElementById('visitorsChange').textContent = stats.visitorsChange || '+0%';
+          document.getElementById('ordersChange').textContent = stats.ordersChange || '+0%';
+          document.getElementById('revenueChange').textContent = stats.revenueChange || '+0%';
+          
+          const stockStatus = document.getElementById('stockStatus');
+          if (stats.stock > 10) stockStatus.textContent = 'В наличност';
+          else if (stats.stock > 0) stockStatus.textContent = 'Ниска наличност';
+          else stockStatus.textContent = 'Изчерпани';
+        }
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+      }
+    }
+
+    function startRealtimeUpdates() {
+      setInterval(updateStats, 30000);
+    }
+
+    function updateLastSyncTime() {
+      const lastSync = localStorage.getItem('admin_lastSync');
+      if (lastSync) {
+        const date = new Date(lastSync);
+        document.getElementById('lastSyncTime').textContent = date.toLocaleString('bg-BG');
+      }
+    }
+
+    // ===== CHARTS =====
+    function initSalesChart() {
+      const ctx = document.getElementById('salesChart').getContext('2d');
+      salesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'],
+          datasets: [{
+            label: 'Продажби (€)',
+            data: [120, 190, 150, 250, 220, 300, 280],
+            borderColor: '#0071e3',
+            backgroundColor: 'rgba(0,113,227,0.1)',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, grid: { color: '#e2e8f0' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    function initAnalyticsCharts() {
+      const convCtx = document.getElementById('conversionChart').getContext('2d');
+      conversionChart = new Chart(convCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Поръчки', 'Изоставени кошници'],
+          datasets: [{
+            data: [65, 35],
+            backgroundColor: ['#22c55e', '#ef4444']
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+
+      const visitsCtx = document.getElementById('visitsChart').getContext('2d');
+      visitsChart = new Chart(visitsCtx, {
+        type: 'bar',
+        data: {
+          labels: ['00-04', '04-08', '08-12', '12-16', '16-20', '20-24'],
+          datasets: [{
+            label: 'Посещения',
+            data: [50, 120, 350, 480, 520, 280],
+            backgroundColor: '#8b5cf6'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      const ratingsCtx = document.getElementById('ratingsChart').getContext('2d');
+      ratingsChart = new Chart(ratingsCtx, {
+        type: 'bar',
+        data: {
+          labels: ['5★', '4★', '3★', '2★', '1★'],
+          datasets: [{
+            label: 'Брой отзиви',
+            data: [45, 12, 3, 1, 0],
+            backgroundColor: ['#22c55e', '#84cc16', '#eab308', '#f97316', '#ef4444']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          indexAxis: 'y'
+        }
+      });
+
+      const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+      revenueChart = new Chart(revenueCtx, {
+        type: 'line',
+        data: {
+          labels: ['Яну', 'Фев', 'Мар', 'Апр', 'Май', 'Юни'],
+          datasets: [{
+            label: 'Приходи (€)',
+            data: [2500, 3200, 2800, 4100, 3800, 5200],
+            borderColor: '#22c55e',
+            backgroundColor: 'rgba(34,197,94,0.1)',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    function updateChart(period) {
+      document.querySelectorAll('.chart-filter').forEach(f => f.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      const data = {
+        '7days': [120, 190, 150, 250, 220, 300, 280],
+        '30days': Array.from({length: 30}, () => Math.floor(Math.random() * 300) + 100),
+        'year': Array.from({length: 12}, () => Math.floor(Math.random() * 5000) + 2000)
+      };
+      
+      salesChart.data.datasets[0].data = data[period];
+      salesChart.update();
+    }
+
+    // ===== ORDERS =====
+    async function loadOrders() {
+      allOrders = DataStore.orders;
+      renderOrders();
+    }
+
+    async function loadRecentOrders() {
+      const orders = DataStore.orders.slice(0, 5);
+      const tbody = document.getElementById('recentOrdersTable');
+      const mobileContainer = document.getElementById('recentOrdersMobile');
+      
+      if (orders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px">Няма поръчки</td></tr>';
+        mobileContainer.innerHTML = '<div class="empty-state">Няма поръчки</div>';
+        return;
+      }
+      
+      tbody.innerHTML = orders.map(o => `
+        <tr>
+          <td>#${o.id}</td>
+          <td>${o.name}</td>
+          <td>${o.city}</td>
+          <td>€${parseFloat(o.totalEur || 0).toFixed(2)}</td>
+          <td><span class="status-badge status-${o.status || 'new'}">${getStatusText(o.status)}</span></td>
+        </tr>
+      `).join('');
+      
+      mobileContainer.innerHTML = orders.map(o => `
+        <div class="mobile-card">
+          <div class="mobile-card-header">
+            <span class="mobile-card-id">#${o.id}</span>
+            <span class="status-badge status-${o.status || 'new'}">${getStatusText(o.status)}</span>
+          </div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Клиент</span><span class="mobile-card-value">${o.name}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Град</span><span class="mobile-card-value">${o.city}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Сума</span><span class="mobile-card-value" style="color:var(--success)">€${parseFloat(o.totalEur || 0).toFixed(2)}</span></div>
+        </div>
+      `).join('');
+    }
+
+    function renderOrders() {
+      let orders = allOrders;
+      
+      if (currentOrderTab !== 'all') {
+        orders = orders.filter(o => o.status === currentOrderTab);
+      }
+      
+      const searchTerm = document.getElementById('orderSearch')?.value?.toLowerCase() || '';
+      if (searchTerm) {
+        orders = orders.filter(o => 
+          o.name?.toLowerCase().includes(searchTerm) ||
+          o.phone?.includes(searchTerm) ||
+          o.id?.toString().includes(searchTerm)
+        );
+      }
+      
+      document.getElementById('ordersCount').textContent = `(${orders.length})`;
+      document.getElementById('tabNewCount').textContent = `(${allOrders.filter(o => o.status === 'new').length})`;
+      
+      const tbody = document.getElementById('allOrdersTable');
+      const mobileContainer = document.getElementById('ordersMobileCards');
+      
+      if (orders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:40px">Няма поръчки</td></tr>';
+        mobileContainer.innerHTML = '<div class="empty-state">Няма поръчки</div>';
+        return;
+      }
+      
+      tbody.innerHTML = orders.map(o => `
+        <tr>
+          <td><input type="checkbox" ${selectedOrders.has(o.id) ? 'checked' : ''} onchange="toggleOrderSelection(${o.id})"></td>
+          <td>#${o.id}</td>
+          <td>${new Date(o.date).toLocaleDateString('bg-BG')}</td>
+          <td>${o.name}</td>
+          <td>${o.phone}</td>
+          <td>${o.city}</td>
+          <td>${o.qty}</td>
+          <td>€${parseFloat(o.totalEur || 0).toFixed(2)}</td>
+          <td><select class="status-select" onchange="updateOrderStatus(${o.id}, this.value)">
+            <option value="new" ${o.status === 'new' ? 'selected' : ''}>Нова</option>
+            <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>В обработка</option>
+            <option value="completed" ${o.status === 'completed' ? 'selected' : ''}>Завършена</option>
+            <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>Отказана</option>
+          </select></td>
+          <td><div class="actions">
+            <button class="action-btn" onclick="viewOrderDetail(${o.id})">👁</button>
+            <button class="action-btn danger" onclick="deleteOrder(${o.id})">🗑</button>
+          </div></td>
+        </tr>
+      `).join('');
+      
+      mobileContainer.innerHTML = orders.map(o => `
+        <div class="mobile-card">
+          <div class="mobile-card-header">
+            <div><div class="mobile-card-id">#${o.id}</div><div class="mobile-card-date">${new Date(o.date).toLocaleDateString('bg-BG')}</div></div>
+            <select class="status-select" style="width:auto;min-width:120px" onchange="updateOrderStatus(${o.id}, this.value)">
+              <option value="new" ${o.status === 'new' ? 'selected' : ''}>Нова</option>
+              <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>В обработка</option>
+              <option value="completed" ${o.status === 'completed' ? 'selected' : ''}>Завършена</option>
+              <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>Отказана</option>
+            </select>
+          </div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Клиент</span><span class="mobile-card-value">${o.name}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Телефон</span><span class="mobile-card-value">${o.phone}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Град</span><span class="mobile-card-value">${o.city}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Сума</span><span class="mobile-card-value" style="color:var(--success);font-size:16px">€${parseFloat(o.totalEur || 0).toFixed(2)}</span></div>
+          <div class="mobile-card-actions">
+            <button class="btn btn-sm" onclick="viewOrderDetail(${o.id})" style="flex:1">👁 Виж</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteOrder(${o.id})" style="flex:1">🗑</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setOrderTab(status) {
+      currentOrderTab = status;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      renderOrders();
+    }
+
+    function searchOrders() {
+      renderOrders();
+    }
+
+    function filterOrders() {
+      renderOrders();
+    }
+
+    function getStatusText(status) {
+      const map = { new: 'Нова', processing: 'В обработка', completed: 'Завършена', cancelled: 'Отказана' };
+      return map[status] || 'Нова';
+    }
+
+    function toggleOrderSelection(id) {
+      if (selectedOrders.has(id)) selectedOrders.delete(id);
+      else selectedOrders.add(id);
+    }
+
+    function toggleSelectAll() {
+      const checkbox = document.getElementById('selectAll');
+      if (checkbox.checked) allOrders.forEach(o => selectedOrders.add(o.id));
+      else selectedOrders.clear();
+      renderOrders();
+    }
+
+    function selectAllOrders() {
+      allOrders.forEach(o => selectedOrders.add(o.id));
+      document.getElementById('selectAll').checked = true;
+      renderOrders();
+    }
+
+    async function updateOrderStatus(id, status) {
+      try {
+        await fetch('/.netlify/functions/update-order-status', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, status })
+        });
+        
+        const order = allOrders.find(o => o.id === id);
+        if (order) order.status = status;
+        DataStore.save();
+        
+        showToast('Статусът е обновен', 'success');
+      } catch (error) {
+        showToast('Грешка при обновяване', 'error');
+      }
+    }
+
+    function viewOrderDetail(id) {
+      currentOrderId = id;
+      const order = allOrders.find(o => o.id === id);
+      if (!order) return;
+      
+      document.getElementById('orderDetailBody').innerHTML = `
+        <div style="display:grid;gap:12px">
+          <div class="mobile-card-row"><span class="mobile-card-label">№ Поръчка</span><span class="mobile-card-value">#${order.id}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Дата</span><span class="mobile-card-value">${new Date(order.date).toLocaleString('bg-BG')}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Клиент</span><span class="mobile-card-value">${order.name}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Телефон</span><span class="mobile-card-value">${order.phone}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Град</span><span class="mobile-card-value">${order.city}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Адрес</span><span class="mobile-card-value">${order.address || order.deliveryAddress || '-'}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Количество</span><span class="mobile-card-value">${order.qty} бр.</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Промо код</span><span class="mobile-card-value">${order.promo_code || '-'}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Обща сума</span><span class="mobile-card-value" style="color:var(--success);font-size:18px">€${parseFloat(order.totalEur || order.total_eur || 0).toFixed(2)}</span></div>
+        </div>
+      `;
+      document.getElementById('orderModal').classList.add('show');
+    }
+
+    function closeOrderModal() {
+      document.getElementById('orderModal').classList.remove('show');
+      currentOrderId = null;
+    }
+
+    async function markOrderCompleted() {
+      if (currentOrderId) {
+        await updateOrderStatus(currentOrderId, 'completed');
+        closeOrderModal();
+        renderOrders();
+      }
+    }
+
+    async function deleteOrder(id) {
+      if (!confirm('Сигурни ли сте?')) return;
+      
+      try {
+        await fetch('/.netlify/functions/delete-order', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        
+        allOrders = allOrders.filter(o => o.id !== id);
+        DataStore.orders = allOrders;
+        DataStore.save();
+        
+        renderOrders();
+        updateStats();
+        showToast('Поръчката е изтрита', 'success');
+      } catch (error) {
+        showToast('Грешка при изтриване', 'error');
+      }
+    }
+
+    function bulkComplete() {
+      if (selectedOrders.size === 0) {
+        showToast('Изберете поръчки първо', 'warning');
+        return;
+      }
+      selectedOrders.forEach(id => updateOrderStatus(id, 'completed'));
+      selectedOrders.clear();
+      document.getElementById('selectAll').checked = false;
+      renderOrders();
+      showToast('Поръчките са завършени', 'success');
+    }
+
+    function bulkDelete() {
+      if (selectedOrders.size === 0) {
+        showToast('Изберете поръчки първо', 'warning');
+        return;
+      }
+      if (!confirm(`Изтрий ${selectedOrders.size} поръчки?`)) return;
+      selectedOrders.forEach(id => deleteOrder(id));
+      selectedOrders.clear();
+    }
+
+    function exportOrders() {
+      const csv = allOrders.map(o => `${o.id},${o.name},${o.phone},${o.city},${o.totalEur},${o.status}`).join('\n');
+      const blob = new Blob([`ID,Name,Phone,City,Total,Status\n${csv}`], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `orders_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      showToast('Поръчките са експортирани', 'success');
+    }
+
+    // ===== REVIEWS =====
+    async function loadAdminReviews() {
+      allReviews = DataStore.reviews;
+      renderReviews();
+    }
+
+    function renderReviews() {
+      const container = document.getElementById('adminReviewsGrid');
+      document.getElementById('reviewsCount').textContent = `(${allReviews.length})`;
+      
+      if (allReviews.length === 0) {
+        container.innerHTML = '<div class="empty-state" style="grid-column:1/-1">Няма отзиви</div>';
+        return;
+      }
+      
+      container.innerHTML = allReviews.map(r => `
+        <div class="review-card">
+          <div class="review-header">
+            <div class="reviewer">
+              <div class="reviewer-avatar">${r.name.charAt(0)}</div>
+              <div class="reviewer-info">
+                <div class="reviewer-name">${r.name} ${r.verified ? '✓' : ''}</div>
+                <div class="reviewer-date">${new Date(r.createdAt).toLocaleDateString('bg-BG')}</div>
+              </div>
+            </div>
+          </div>
+          <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+          <div class="review-text">${r.text}</div>
+          <div class="review-actions">
+            <button class="btn btn-sm btn-success" onclick="verifyReview('${r.id}')">✓ Провери</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteReview('${r.id}')">🗑 Изтрий</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function addReviewFromAdmin(e) {
+      e.preventDefault();
+      const reviewData = {
+        name: document.getElementById('adminReviewName').value,
+        rating: parseInt(document.getElementById('adminReviewRating').value),
+        text: document.getElementById('adminReviewText').value,
+        verified: document.getElementById('adminReviewVerified').checked,
+        createdAt: new Date().toISOString(),
+        id: 'REV-' + Date.now().toString(36).toUpperCase()
+      };
+      
+      try {
+        await fetch('/.netlify/functions/save-review', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(reviewData)
+        });
+        
+        allReviews.unshift(reviewData);
+        DataStore.reviews = allReviews;
+        DataStore.save();
+        
+        document.getElementById('addReviewForm').reset();
+        updateStarDisplay(5);
+        renderReviews();
+        updateStats();
+        showToast('Отзивът е добавен!', 'success');
+      } catch (error) {
+        showToast('Грешка при добавяне', 'error');
+      }
+    }
+
+    async function verifyReview(id) {
+      const review = allReviews.find(r => r.id === id);
+      if (review) {
+        review.verified = true;
+        DataStore.reviews = allReviews;
+        DataStore.save();
+        renderReviews();
+        showToast('Отзивът е маркиран като проверен', 'success');
+      }
+    }
+
+    async function deleteReview(id) {
+      if (!confirm('Сигурни ли сте?')) return;
+      
+      try {
+        await fetch('/.netlify/functions/delete-review', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        
+        allReviews = allReviews.filter(r => r.id !== id);
+        DataStore.reviews = allReviews;
+        DataStore.save();
+        
+        renderReviews();
+        updateStats();
+        showToast('Отзивът е изтрит', 'success');
+      } catch (error) {
+        showToast('Грешка при изтриване', 'error');
+      }
+    }
+
+    function filterReviews() {
+      renderReviews();
+    }
+
+    // ===== PROMO CODES =====
+    async function loadPromoCodes() {
+      try {
+        const response = await fetch('/.netlify/functions/get-promos');
+        const result = await response.json();
+        
+        if (result.success) {
+          DataStore.promos = result.promos || [];
+          DataStore.save();
+        }
+      } catch (error) {
+        console.error('Error loading promos:', error);
+      }
+      
+      renderPromos();
+    }
+
+    function renderPromos() {
+      const promos = DataStore.promos;
+      const container = document.getElementById('promoList');
+      
+      if (promos.length === 0) {
+        container.innerHTML = '<div class="empty-state">Няма промо кодове</div>';
+        return;
+      }
+      
+      container.innerHTML = promos.map((p, i) => `
+        <div class="promo-item">
+          <div>
+            <div class="promo-code">${p.code}</div>
+            <div class="promo-uses">Използван: ${p.uses || 0}${p.maxUses ? '/' + p.maxUses : ''} пъти</div>
+          </div>
+          <div style="text-align:right">
+            <div class="promo-discount">-${p.discount}%</div>
+            <button class="btn btn-sm btn-danger" onclick="deletePromo(${i})">🗑</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function addPromoCode(e) {
+      e.preventDefault();
+      const promoData = {
+        code: document.getElementById('promoCode').value.toUpperCase(),
+        discount: parseInt(document.getElementById('promoDiscount').value),
+        maxUses: parseInt(document.getElementById('promoMaxUses').value) || 0,
+        expiry: document.getElementById('promoExpiry').value,
+        uses: 0,
+        createdAt: new Date().toISOString()
+      };
+      
+      try {
+        await fetch('/.netlify/functions/save-promo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(promoData)
+        });
+        
+        DataStore.promos.push(promoData);
+        DataStore.save();
+        
+        document.getElementById('addPromoForm').reset();
+        renderPromos();
+        showToast('Промо кодът е добавен!', 'success');
+      } catch (error) {
+        showToast('Грешка при добавяне', 'error');
+      }
+    }
+
+    function deletePromo(index) {
+      DataStore.promos.splice(index, 1);
+      DataStore.save();
+      renderPromos();
+      showToast('Промо кодът е изтрит', 'success');
+    }
+
+    // ===== STOCK =====
+    function loadStock() {
+      const stock = DataStore.stock;
+      const container = document.getElementById('stockList');
+      
+      container.innerHTML = `
+        <div class="stock-item">
+          <div class="stock-info">
+            <div class="stock-name">AirPods Pro 3</div>
+            <div class="stock-sku">SKU: AIRPODS-PRO-3</div>
+          </div>
+          <div class="stock-controls">
+            <input type="number" class="stock-input" id="stockAirpods" value="${stock.airpods}" min="0" />
+            <span class="stock-status ${stock.airpods > 10 ? 'instock' : stock.airpods > 0 ? 'low' : 'out'}">
+              ${stock.airpods > 10 ? 'В наличност' : stock.airpods > 0 ? 'Ниска наличност' : 'Изчерпани'}
+            </span>
+          </div>
+        </div>
+      `;
+    }
+
+    async function saveStockChanges() {
+      const stock = {
+        airpods: parseInt(document.getElementById('stockAirpods').value) || 0
+      };
+      
+      try {
+        await fetch('/.netlify/functions/update-stock', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(stock)
+        });
+        
+        DataStore.stock = stock;
+        DataStore.save();
+        
+        showToast('Наличностите са запазени!', 'success');
+        loadStock();
+        updateStats();
+      } catch (error) {
+        showToast('Грешка при запазване', 'error');
+      }
+    }
+
+    // ===== CUSTOMERS =====
+    function loadCustomers() {
+      // Extract unique customers from orders
+      const customersMap = new Map();
+      
+      DataStore.orders.forEach(o => {
+        const key = o.phone;
+        if (!customersMap.has(key)) {
+          customersMap.set(key, {
+            name: o.name,
+            phone: o.phone,
+            city: o.city,
+            orders: 0,
+            total: 0
+          });
+        }
+        const customer = customersMap.get(key);
+        customer.orders++;
+        customer.total += parseFloat(o.totalEur || 0);
+      });
+      
+      allCustomers = Array.from(customersMap.values());
+      renderCustomers();
+    }
+
+    function renderCustomers() {
+      let customers = allCustomers;
+      
+      const searchTerm = document.getElementById('customerSearch')?.value?.toLowerCase() || '';
+      if (searchTerm) {
+        customers = customers.filter(c => 
+          c.name?.toLowerCase().includes(searchTerm) ||
+          c.phone?.includes(searchTerm)
+        );
+      }
+      
+      document.getElementById('customersCount').textContent = `(${customers.length})`;
+      
+      const tbody = document.getElementById('customersTable');
+      const mobileContainer = document.getElementById('customersMobile');
+      
+      if (customers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px">Няма клиенти</td></tr>';
+        mobileContainer.innerHTML = '<div class="empty-state">Няма клиенти</div>';
+        return;
+      }
+      
+      tbody.innerHTML = customers.map(c => `
+        <tr>
+          <td>${c.name}</td>
+          <td>${c.phone}</td>
+          <td>${c.city}</td>
+          <td>${c.orders}</td>
+          <td>€${c.total.toFixed(2)}</td>
+          <td><button class="action-btn" onclick="viewCustomer('${c.phone}')">👁</button></td>
+        </tr>
+      `).join('');
+      
+      mobileContainer.innerHTML = customers.map(c => `
+        <div class="mobile-card">
+          <div class="mobile-card-row"><span class="mobile-card-label">Име</span><span class="mobile-card-value">${c.name}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Телефон</span><span class="mobile-card-value">${c.phone}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Град</span><span class="mobile-card-value">${c.city}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Поръчки</span><span class="mobile-card-value">${c.orders}</span></div>
+          <div class="mobile-card-row"><span class="mobile-card-label">Общо</span><span class="mobile-card-value" style="color:var(--success)">€${c.total.toFixed(2)}</span></div>
+        </div>
+      `).join('');
+    }
+
+    function searchCustomers() {
+      renderCustomers();
+    }
+
+    function viewCustomer(phone) {
+      const customer = allCustomers.find(c => c.phone === phone);
+      if (customer) {
+        showToast(`Клиент: ${customer.name}, Поръчки: ${customer.orders}`, 'success');
+      }
+    }
+
+    function exportCustomers() {
+      const csv = allCustomers.map(c => `${c.name},${c.phone},${c.city},${c.orders},${c.total.toFixed(2)}`).join('\n');
+      const blob = new Blob([`Name,Phone,City,Orders,Total\n${csv}`], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `customers_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      showToast('Клиентите са експортирани', 'success');
+    }
+
+    // ===== FINANCE =====
+    function loadFinance() {
+      const totalRevenue = DataStore.orders.reduce((sum, o) => sum + parseFloat(o.totalEur || 0), 0);
+      const avgOrder = DataStore.orders.length > 0 ? totalRevenue / DataStore.orders.length : 0;
+      
+      document.getElementById('financeTotalRevenue').textContent = '€' + totalRevenue.toFixed(2);
+      document.getElementById('financeAvgOrder').textContent = '€' + avgOrder.toFixed(2);
+      
+      const tbody = document.getElementById('financeTable');
+      tbody.innerHTML = DataStore.orders.slice(0, 20).map(o => `
+        <tr>
+          <td>${new Date(o.date).toLocaleDateString('bg-BG')}</td>
+          <td>${o.name}</td>
+          <td>Поръчка #${o.id}</td>
+          <td style="color:var(--success);font-weight:600">€${parseFloat(o.totalEur || 0).toFixed(2)}</td>
+        </tr>
+      `).join('');
+    }
+
+    // ===== SETTINGS =====
+    function loadSettings() {
+      const settings = DataStore.settings;
+      if (settings.price) document.getElementById('settingPrice').value = settings.price;
+      if (settings.oldPrice) document.getElementById('settingOldPrice').value = settings.oldPrice;
+      if (settings.phone) document.getElementById('settingPhone').value = settings.phone;
+      if (settings.email) document.getElementById('settingEmail').value = settings.email;
+      if (settings.siteName) document.getElementById('settingSiteName').value = settings.siteName;
+      updateLastSyncTime();
+    }
+
+    function saveSettings() {
+      DataStore.settings = {
+        price: document.getElementById('settingPrice').value,
+        oldPrice: document.getElementById('settingOldPrice').value,
+        phone: document.getElementById('settingPhone').value,
+        email: document.getElementById('settingEmail').value,
+        siteName: document.getElementById('settingSiteName').value
+      };
+      DataStore.save();
+      showToast('Настройките са запазени!', 'success');
+    }
+
+    async function syncWithGitHub() {
+      showToast('Синхронизиране...', 'success');
+      await DataStore.sync();
+      updateLastSyncTime();
+      if (currentSection === 'orders') loadOrders();
+      if (currentSection === 'reviews') loadAdminReviews();
+    }
+
+    function exportAllData() {
+      const data = {
+        orders: DataStore.orders,
+        reviews: DataStore.reviews,
+        promos: DataStore.promos,
+        stock: DataStore.stock,
+        settings: DataStore.settings,
+        exportedAt: new Date().toISOString()
+      };
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `airstore_backup_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      showToast('Всички данни са експортирани!', 'success');
+    }
+
+    // ===== UTILS =====
+    function showToast(msg, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = msg;
+      container.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.add('show'));
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    function refreshData() {
+      updateStats();
+      if (currentSection === 'orders') loadOrders();
+      if (currentSection === 'reviews') loadAdminReviews();
+      showToast('Данните са обновени!', 'success');
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeOrderModal();
+        document.getElementById('notificationPanel').classList.remove('open');
+      }
+      if (e.ctrlKey && e.key === 'r') {
+        e.preventDefault();
+        refreshData();
+      }
+    });
+  </script>
+</body>
+</html>
